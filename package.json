@@ -1,0 +1,32 @@
+{
+  "name": "react-gateway",
+  "version": "0.0.0",
+  "description": "Render React DOM into a new context on document.body",
+  "main": "index.js",
+  "scripts": {
+    "test": "karma start"
+  },
+  "keywords": [
+    "react",
+    "gateway",
+    "portal",
+    "modal",
+    "dialog"
+  ],
+  "author": "James Kyle <me@thejameskyle.com>",
+  "license": "BSD-3-Clause",
+  "dependencies": {
+    "react": "^0.14.2",
+    "react-dom": "^0.14.2"
+  },
+  "devDependencies": {
+    "chai": "^3.4.0",
+    "jsdom": "^7.0.2",
+    "karma": "^0.13.15",
+    "karma-browserify": "^4.4.0",
+    "karma-mocha": "^0.2.0",
+    "karma-mocha-reporter": "^1.1.1",
+    "mocha": "^2.3.3",
+    "react-addons-test-utils": "^0.14.2"
+  }
+}
