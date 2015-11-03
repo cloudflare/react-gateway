@@ -1,6 +1,6 @@
 {
   "name": "react-gateway",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Render React DOM into a new context on document.body",
   "main": "index.js",
   "scripts": {
