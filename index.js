@@ -2,19 +2,29 @@
 
 var React = require('react');
 var ReactDOM = require('react-dom');
+var ExecutionEnvironment = require('exenv');
+
+var SafeHTMLElement = ExecutionEnvironment.canUseDOM ? window.HTMLElement : {};
 
 module.exports = React.createClass({
   displayName: 'ReactGateway',
 
   propTypes: {
+    to: React.PropTypes.instanceOf(SafeHTMLElement),
     className: React.PropTypes.string,
     children: React.PropTypes.element.isRequired
+  },
+
+  getDefaultProps: function() {
+    return {
+      to: document.body
+    };
   },
 
   componentDidMount: function() {
     this.gatewayNode = document.createElement('div');
     if (this.props.className) this.gatewayNode.className = this.props.className;
-    document.body.appendChild(this.gatewayNode);
+    this.props.to.appendChild(this.gatewayNode);
     this.renderIntoGatewayNode(this.props);
   },
 
@@ -24,7 +34,7 @@ module.exports = React.createClass({
 
   componentWillUnmount: function() {
     ReactDOM.unmountComponentAtNode(this.gatewayNode);
-    document.body.removeChild(this.gatewayNode);
+    this.props.to.removeChild(this.gatewayNode);
     delete this.gatewayNode;
   },
 

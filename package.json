@@ -16,6 +16,7 @@
   "author": "James Kyle <me@thejameskyle.com>",
   "license": "ISC",
   "dependencies": {
+    "exenv": "^1.2.0",
     "react": "^0.14.2",
     "react-dom": "^0.14.2"
   },

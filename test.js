@@ -38,7 +38,7 @@ describe('ReactGateway', function() {
     var child = instance.gatewayNode.children[0];
     expect(child.tagName).to.equal('H1');
     expect(child.textContent).to.equal('Hello world');
-    expect(instance.gatewayNode.parentElement).to.equal(document.body);
+    expect(instance.gatewayNode.parentNode).to.equal(document.body);
   });
 
   it('should update with new props', function() {
@@ -55,6 +55,16 @@ describe('ReactGateway', function() {
     var gatewayNode = instance.gatewayNode;
     ReactDOM.unmountComponentAtNode(this.root);
     expect(instance).not.to.have.property('gatewayNode');
-    expect(gatewayNode.parentElement).to.equal(null);
+    expect(gatewayNode.parentNode).to.equal(null);
+  });
+
+  it('should be able to specify a `to` node', function() {
+    var toNode = document.createElement('div');
+    document.body.appendChild(toNode);
+    var dom = d(ReactGateway, { to: toNode }, d('div'));
+    var instance = ReactDOM.render(dom, this.root);
+    expect(instance.gatewayNode.parentNode).to.equal(toNode);
+    ReactDOM.unmountComponentAtNode(this.root);
+    document.body.removeChild(toNode);
   });
 });
