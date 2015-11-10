@@ -67,4 +67,20 @@ describe('ReactGateway', function() {
     ReactDOM.unmountComponentAtNode(this.root);
     document.body.removeChild(toNode);
   });
+
+  it('should still remove the element even if the `to` prop changes', function() {
+    var toNode1 = document.createElement('div');
+    var toNode2 = document.createElement('div');
+    document.body.appendChild(toNode1);
+    document.body.appendChild(toNode2);
+    var dom1 = d(ReactGateway, { to: toNode1 }, d('div'));
+    var instance1 = ReactDOM.render(dom1, this.root);
+    var dom2 = d(ReactGateway, { to: toNode2 }, d('div'));
+    var instance2 = ReactDOM.render(dom2, this.root);
+    var gatewayNode1 = instance1.gatewayNode;
+    var gatewayNode2 = instance2.gatewayNode;
+    ReactDOM.unmountComponentAtNode(this.root);
+    expect(gatewayNode1.parentNode).to.equal(null);
+    expect(gatewayNode2.parentNode).to.equal(null);
+  });
 });
