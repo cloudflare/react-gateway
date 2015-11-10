@@ -34,7 +34,7 @@ module.exports = React.createClass({
 
   componentWillUnmount: function() {
     ReactDOM.unmountComponentAtNode(this.gatewayNode);
-    this.props.to.removeChild(this.gatewayNode);
+    this.gatewayNode.parentNode.removeChild(this.gatewayNode);
     delete this.gatewayNode;
   },
 
