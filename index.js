@@ -15,12 +15,6 @@ module.exports = React.createClass({
     children: React.PropTypes.element.isRequired
   },
 
-  getDefaultProps: function() {
-    return {
-      to: document.body
-    };
-  },
-
   componentDidMount: function() {
     this.gatewayNode = document.createElement('div');
     if (this.props.className) this.gatewayNode.className = this.props.className;
