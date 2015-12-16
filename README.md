@@ -27,7 +27,10 @@ export default class MyComponent extends React.Component {
 
 ## Props
 
-| Name | Type | Description |
-| --- | --- | --- | --- |
-| `to` | `HTMLElement` | Specify where in the DOM to go to. (Default: `document.body`) |
-| `className` | `String` | Add a className to the generated DOM node. |
+| Name | Type | Description | Required
+| --- | --- | --- | --- | --- |
+| `to` | `HTMLElement` | Specify where in the DOM to go to. (Default: `document.body`) | yes |
+| `className` | `String` | Add a className to the generated DOM node. | no |
+
+`to` prop is required to keep `react-gateway` renderable on server. You can wrap ReactGateway by your own component 
+and supply `document.body` there.
