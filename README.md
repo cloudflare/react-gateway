@@ -2,6 +2,9 @@
 
 > Render React DOM into a new context on document.body
 
+This can be used to implement various UI components such as modals.
+See [`react-modal2`](https://github.com/cloudflare/react-modal2).
+
 ## Installation
 
 ```sh
