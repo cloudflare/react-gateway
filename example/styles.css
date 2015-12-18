@@ -1,0 +1,17 @@
+body {
+  font: 1em/1.5 "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.container {
+  background: #eee;
+  margin: 0.5em 0;
+  padding: 0.5em 1em;
+  border: 2px solid #ddd;
+}
+
+.item {
+  background: #ddd;
+  padding: 1em;
+  margin: 0.5em 0;
+  border: 2px solid #ccc;
+}

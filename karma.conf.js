@@ -1,76 +1,139 @@
-// Karma configuration
-// Generated on Tue Nov 03 2015 13:28:20 GMT-0800 (PST)
+'use strict';
+var customLaunchers = {};
+
+var minimist = require('minimist');
+var defined = require('defined');
+
+var args = minimist(process.argv.slice(2), {
+  string: ['env', 'build-branch', 'build-number', 'suace-username', 'sauce-key'],
+  'default': {
+    env: process.env.NODE_ENV,
+    'build-branch': process.env.BUILD_BRANCH,
+    'build-number': process.env.BUILD_NUMBER,
+    'sauce-username': process.env.SAUCE_USERNAME,
+    'sauce-key': process.env.SAUCE_ACCESS_KEY
+  }
+});
+
+args.istanbul = defined(args.istanbul, args.env !== 'CI');
+args['sauce-labs'] = defined(args['sauce-labs'], args.env === 'CI');
+
+// Overridable arguments are denoted below. Other arguments can be found in the
+// [Karma configuration](http://karma-runner.github.io/0.12/config/configuration-file.html)
+
+['chrome', 'firefox', 'iphone', 'ipad', 'android'].forEach(function(browser) {
+  customLaunchers['sl_' + browser] = {
+    base: 'SauceLabs',
+    browserName: browser
+  };
+});
+
+// Safari defaults to version 5 on Windows 7 (huh?)
+customLaunchers.sl_safari = {
+  base: 'SauceLabs',
+  browserName: 'safari',
+  platform: 'OS X 10.9'
+};
+
+[9, 10, 11].forEach(function(version) {
+  customLaunchers['sl_ie_' + version] = {
+    base: 'SauceLabs',
+    browserName: 'internet explorer',
+    version: version
+  };
+});
+
+var reporters = ['mocha', 'beep'];
+
+if (args.istanbul) {
+  reporters.push('coverage');
+}
 
 module.exports = function(config) {
   config.set({
+    frameworks: ['browserify', 'mocha'],
 
-    // base path that will be used to resolve all patterns (eg. files, exclude)
-    basePath: '',
-
-
-    // frameworks to use
-    // available frameworks: https://npmjs.org/browse/keyword/karma-adapter
-    frameworks: ['mocha', 'browserify'],
-
-
-    // list of files / patterns to load in the browser
     files: [
-      'test.js'
+      {
+        pattern: 'http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js',
+        watched: false,
+        included: true,
+        served: false
+      },
+      {
+        pattern: 'test/**/*.js',
+        watched: true,
+        included: true,
+        served: true
+      }
     ],
 
-
-    // list of files to exclude
-    exclude: [
-    ],
-
-
-    // preprocess matching files before serving them to the browser
-    // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-        'test.js': ['browserify']
+      'test/**/*.js': ['browserify']
     },
 
+    // Overridable with a comma-separated list with `--reporters`
+    reporters: reporters,
 
-    // test results reporter to use
-    // possible values: 'dots', 'progress'
-    // available reporters: https://npmjs.org/browse/keyword/karma-reporter
-    reporters: ['progress', 'mocha'],
-
-
-    // web server port
-    port: 9876,
-
-
-    // enable / disable colors in the output (reporters and logs)
+    // Overridable with `[--no]-colors
     colors: true,
 
-
-    // level of logging
-    // possible values: config.LOG_DISABLE || config.LOG_ERROR || config.LOG_WARN || config.LOG_INFO || config.LOG_DEBUG
+    /* Overridable with `--log-level=<level>`.
+     *
+     * Possible 'level' options include:
+     *  * disable
+     *  * error
+     *  * warn
+     *  * info
+     *  * debug
+     */
     logLevel: config.LOG_INFO,
 
+    // Overridable with a comma-separated list with `--browsers`
+    browsers: args['sauce-labs'] ? Object.keys(customLaunchers) : [
+      'Chrome',
+      'Firefox',
+      'Safari'
+    ],
 
-    // enable / disable watching file and executing tests whenever any file changes
-    autoWatch: true,
+    sauceLabs: {
+      username: args['sauce-username'],
+      accessKey: args['sauce-key'],
+      testName: require('./package.json').name,
+      tags: args['build-branch'],
+      build: args['build-number']
+    },
 
-
-    // start these browsers
-    // available browser launchers: https://npmjs.org/browse/keyword/karma-launcher
-    browsers: [],
-
-
-    // Continuous Integration mode
-    // if true, Karma captures browsers, runs the tests and exits
-    singleRun: false,
-
-    // Concurrency level
-    // how many browser should be started simultanous
-    concurrency: Infinity,
-
-    // Browserify configuration
     browserify: {
-        debug: true,
-        transform: []
-    }
-  })
-}
+      debug: true,
+      transform: [
+        'babelify'
+      ].concat(args.istanbul && [
+        ['browserify-istanbul', {
+          ignore: ['**/*.handlebars']
+        }]
+      ] || [])
+    },
+
+    coverageReporter: {
+      reporters: [
+        {
+          type: 'html'
+        },
+        {
+          type: 'text'
+        }
+      ]
+    },
+
+    client: {
+      // '--grep' arguments are passed directly to mocha.
+      args: args.grep && ['--grep', args.grep],
+      mocha: {
+        reporter: 'html'
+      }
+    },
+
+    customLaunchers: customLaunchers
+  });
+};

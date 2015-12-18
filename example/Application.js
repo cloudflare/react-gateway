@@ -1,30 +1,14 @@
-# React Gateway
-
-> Render React DOM into a new context
-
-This can be used to implement various UI components such as modals.
-See [`react-modal2`](https://github.com/cloudflare/react-modal2).
-
-## Installation
-
-```sh
-$ npm install --save react-gateway
-```
-
-## Usage
-
-```js
 import React from 'react';
 import {
   Gateway,
   GatewayDest,
   GatewayProvider
-} from 'react-gateway';
+} from '../src/index';
 
-export default class Application extends React.Component {
+class Application extends React.Component {
   render() {
     return (
-      <GatewayProvider>
+      <div>
         <h1>React Gateway Universal Example</h1>
         <div className="container">
           <Gateway into="one">
@@ -40,8 +24,17 @@ export default class Application extends React.Component {
         </div>
         <GatewayDest name="one" tagName="section" className="hello"/>
         <GatewayDest name="two"/>
+      </div>
+    );
+  }
+}
+
+export default class Root extends React.Component {
+  render() {
+    return (
+      <GatewayProvider>
+        <Application/>
       </GatewayProvider>
     );
   }
 }
-```
