@@ -1,9 +1,12 @@
 # React Gateway
 
-> Render React DOM into a new context
+> Render React DOM into a new context (aka "Portal")
 
 This can be used to implement various UI components such as modals.
 See [`react-modal2`](https://github.com/cloudflare/react-modal2).
+
+It also works in universal (isomorphic) React applications without any
+additional setup.
 
 ## Installation
 
@@ -118,12 +121,6 @@ If you want to customize the `<GatewayDest>` element, you can pass any props,
 including `tagName`, and they will be passed to the created element.
 
 ```diff
-  import React from 'react';
-  import {
-    GatewayProvider,
-    GatewayDest
-  } from 'react-gateway';
-
   export default class Application extends React.Component {
     render() {
       return (
@@ -138,3 +135,17 @@ including `tagName`, and they will be passed to the created element.
     }
   }
 ```
+
+## How it works
+
+React Gateway works very differently than most React "portals" in order to work
+in server-side rendered React applications.
+
+It maintains an internal registry of "containers" and "children" which manages
+where things should be rendered.
+
+This registry is created by `<GatewayProvider>` and passed to `<Gateway>` and
+`<GatewayDest>` invisibly via React's `contextTypes`.
+
+Whenever a child or container is added or removed, React Gateway will
+update its internal registry and ensure things are properly rendered.
