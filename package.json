@@ -26,7 +26,7 @@
   "devDependencies": {
     "babel-cli": "^6.1.1",
     "babel-core": "^6.0.20",
-    "babel-preset-cf": "^1.1.0",
+    "babel-preset-cf": "^1.2.0",
     "babelify": "^7.2.0",
     "browserify-istanbul": "^0.2.1",
     "chai": "^3.4.1",
