@@ -19,6 +19,7 @@
     "dialog"
   ],
   "author": "James Kyle <me@thejameskyle.com>",
+  "repository": "https://github.com/cloudflare/react-gateway",
   "license": "BSD-3-Clause",
   "dependencies": {
     "react": "^0.14.2"
