@@ -34,8 +34,12 @@ export default class GatewayRegistry {
     this._renderContainer(name);
   }
 
-  removeChild(name) {
+  clearChild(name) {
     this._children[name] = null;
+  }
+
+  removeChild(name) {
+    this.clearChild(name);
     this._renderContainer(name);
   }
 }

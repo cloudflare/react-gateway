@@ -11,7 +11,7 @@ export default class Gateway extends React.Component {
     children: React.PropTypes.oneOfType([
       React.PropTypes.element,
       React.PropTypes.string
-    ]),
+    ])
   };
 
   constructor(props, context) {
@@ -24,11 +24,12 @@ export default class Gateway extends React.Component {
   }
 
   componentWillReceiveProps(props) {
+    this.gatewayRegistry.clearChild(this.props.into);
     this.renderIntoGatewayNode(props);
   }
 
   componentWillUnmount() {
-    this.gatewayRegistry.removeChild(this.props.into, this.props.children);
+    this.gatewayRegistry.removeChild(this.props.into);
   }
 
   renderIntoGatewayNode(props) {
