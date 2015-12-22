@@ -21,7 +21,7 @@ export default class GatewayDest extends React.Component {
   }
 
   state = {
-    children: []
+    child: null
   };
 
   componentWillMount() {
@@ -35,6 +35,6 @@ export default class GatewayDest extends React.Component {
   render() {
     const { tagName, ...attrs } = this.props;
     delete attrs.name;
-    return React.createElement(tagName, attrs, this.state.children);
+    return React.createElement(tagName, attrs, this.state.child);
   }
 }

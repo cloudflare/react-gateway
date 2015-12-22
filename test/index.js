@@ -49,24 +49,6 @@ describe('Gateway', function() {
     );
   });
 
-  it('should be able to render multiple elements into GatewayDest', function() {
-    assertEqual(
-      <GatewayProvider>
-        <div>
-          <Gateway into="foo">One</Gateway>
-          <Gateway into="foo">Two</Gateway>
-          <GatewayDest name="foo"/>
-        </div>
-      </GatewayProvider>,
-      // should equal
-      <div>
-        <noscript/>
-        <noscript/>
-        <div>OneTwo</div>
-      </div>
-    );
-  });
-
   it('should render into the correct GatewayDest', function() {
     assertEqual(
       <GatewayProvider>

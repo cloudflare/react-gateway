@@ -10,13 +10,7 @@ export default class GatewayRegistry {
     }
 
     this._containers[name].setState({
-      children: this._children[name]
-    });
-  }
-
-  _cleanupContainer(name) {
-    this._containers[name].setState({
-      children: []
+      child: this._children[name]
     });
   }
 
@@ -25,21 +19,23 @@ export default class GatewayRegistry {
     this._renderContainer(name);
   }
 
-  removeContainer(name, container) {
+  removeContainer(name) {
     this._containers[name] = null;
-    this._cleanupContainer(name);
   }
 
   addChild(name, child) {
-    if (!this._children[name]) {
-      this._children[name] = [];
+    if (this._children[name]) {
+      console.warn(
+        'Only a single Gateway can be rendered at a time into a GatewayDest.' +
+        `You rendered multiple into "${name}"`
+      );
     }
-
-    this._children[name] = this._children[name].concat(child);
+    this._children[name] = child;
     this._renderContainer(name);
   }
 
-  removeChild(name, child) {
-    this._children[name] = this._children[name].filter(c => c !== child);
+  removeChild(name) {
+    this._children[name] = null;
+    this._renderContainer(name);
   }
 }

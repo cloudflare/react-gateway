@@ -6,22 +6,32 @@ import {
 } from '../src/index';
 
 class Application extends React.Component {
+  state = {
+    open: true
+  };
+
+  handleClick() {
+    this.setState({
+      open: false
+    });
+  }
+
   render() {
     return (
       <div>
         <h1>React Gateway Universal Example</h1>
-        <div className="container">
-          <Gateway into="one">
-            <div className="item">Item 1</div>
-          </Gateway>
-          <Gateway into="two">
-            <div className="item">Item 2</div>
-          </Gateway>
-          <Gateway into="one">
+        <button onClick={this.handleClick.bind(this)}>Remove Items</button>
+        {this.state.open && (
+          <div className="container">
+            <Gateway into="one">
+              <div className="item">Item 1</div>
+            </Gateway>
+            <Gateway into="two">
+              <div className="item">Item 2</div>
+            </Gateway>
             <div className="item">Item 3</div>
-          </Gateway>
-          <div className="item">Item 4</div>
-        </div>
+          </div>
+        )}
         <GatewayDest name="one" tagName="section" className="hello"/>
         <GatewayDest name="two"/>
       </div>
