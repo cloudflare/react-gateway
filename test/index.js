@@ -101,10 +101,16 @@ describe('Gateway', function() {
       }
 
       render() {
+        return <Child/>;
+      }
+    }
+
+    class Application extends React.Component {
+      render() {
         return (
           <GatewayProvider>
             <div>
-              <Child/>
+              <Parent/>
               <GatewayDest name="dest"/>
             </div>
           </GatewayProvider>
@@ -113,7 +119,7 @@ describe('Gateway', function() {
     }
 
     assertEqual(
-      <Parent/>,
+      <Application/>,
       // should equal
       <div>
         <noscript/>
