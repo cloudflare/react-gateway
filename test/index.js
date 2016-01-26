@@ -68,4 +68,59 @@ describe('Gateway', function() {
       </div>
     );
   });
+
+  it('should pass context', function() {
+    class Child extends React.Component {
+      static contextTypes = {
+        textContent: React.PropTypes.string.isRequired
+      };
+
+      constructor(props, context) {
+        super(props, context);
+        this.textContent = context.textContent;
+      }
+
+      render() {
+        return (
+          <Gateway into="dest">
+            <span>{this.textContent}</span>
+          </Gateway>
+        );
+      }
+    }
+
+    class Parent extends React.Component {
+      static childContextTypes = {
+        textContent: React.PropTypes.string.isRequired
+      };
+
+      getChildContext() {
+        return {
+          textContent: 'Hello from context'
+        };
+      }
+
+      render() {
+        return (
+          <GatewayProvider>
+            <div>
+              <Child/>
+              <GatewayDest name="dest"/>
+            </div>
+          </GatewayProvider>
+        );
+      }
+    }
+
+    assertEqual(
+      <Parent/>,
+      // should equal
+      <div>
+        <noscript/>
+        <div>
+          <span>Hello from context</span>
+        </div>
+      </div>
+    );
+  });
 });
