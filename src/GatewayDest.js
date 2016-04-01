@@ -9,7 +9,7 @@ export default class GatewayDest extends React.Component {
 
   static propTypes = {
     name: React.PropTypes.string.isRequired,
-    tagName: deprecated(React.PropTypes.string, 'react-gateway: Usage of prop "tagName" is deprecated, use "component" instead.'),
+    tagName: deprecated(React.PropTypes.string, 'Use "component" instead.'),
     component: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.func
