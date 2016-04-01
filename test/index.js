@@ -49,6 +49,21 @@ describe('Gateway', function() {
     );
   });
 
+  it('should be able to customize the GatewayDest with custom components', function() {
+    class Child extends React.Component {
+      render() {
+	return <h1 id='test'>{ this.props.children }</h1>;
+      }
+    }
+    assertEqual(
+      <GatewayProvider>
+        <GatewayDest tagName={Child} id="striped" name="foo"/>
+      </GatewayProvider>,
+      // should equal
+      <Child/>
+    );
+  });
+
   it('should render into the correct GatewayDest', function() {
     assertEqual(
       <GatewayProvider>

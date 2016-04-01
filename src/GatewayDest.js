@@ -8,7 +8,10 @@ export default class GatewayDest extends React.Component {
 
   static propTypes = {
     name: React.PropTypes.string.isRequired,
-    tagName: React.PropTypes.string
+    tagName: React.PropTypes.oneOfType([
+      React.PropTypes.string,
+      React.PropTypes.func
+    ])
   };
 
   static defaultProps = {
