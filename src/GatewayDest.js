@@ -10,8 +10,7 @@ export default class GatewayDest extends React.Component {
     name: React.PropTypes.string.isRequired,
     tagName: React.PropTypes.oneOfType([
       React.PropTypes.string,
-      React.PropTypes.func,
-      React.PropTypes.instanceOf(React.Component)
+      React.PropTypes.func
     ])
   };
 
