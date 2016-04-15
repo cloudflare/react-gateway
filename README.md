@@ -141,7 +141,8 @@ Then in any of your components (that get rendered inside of the
 ```
 
 If you want to customize the `<GatewayDest>` element, you can pass any props,
-including `tagName`, and they will be passed to the created element.
+including `component` (which will allows you to specify a `tagName` or custom
+component), and they will be passed to the created element.
 
 ```diff
   export default class Application extends React.Component {
@@ -151,7 +152,7 @@ including `tagName`, and they will be passed to the created element.
           <div>
             {this.props.children}
 -           <GatewayDest name="global"/>
-+           <GatewayDest name="global" tagName="section" className="global-gateway"/>
++           <GatewayDest name="global" component="section" className="global-gateway"/>
           </div>
         </GatewayProvider>
       );

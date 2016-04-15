@@ -1,5 +1,6 @@
 import React from 'react';
 import GatewayRegistry from './GatewayRegistry';
+import {deprecated} from 'react-prop-types';
 
 export default class GatewayDest extends React.Component {
   static contextTypes = {
@@ -8,14 +9,11 @@ export default class GatewayDest extends React.Component {
 
   static propTypes = {
     name: React.PropTypes.string.isRequired,
-    tagName: React.PropTypes.oneOfType([
+    tagName: deprecated(React.PropTypes.string, 'Use "component" instead.'),
+    component: React.PropTypes.oneOfType([
       React.PropTypes.string,
       React.PropTypes.func
     ])
-  };
-
-  static defaultProps = {
-    tagName: 'div'
   };
 
   constructor(props, context) {
@@ -36,8 +34,8 @@ export default class GatewayDest extends React.Component {
   }
 
   render() {
-    const { tagName, ...attrs } = this.props;
+    const { component, tagName, ...attrs } = this.props;
     delete attrs.name;
-    return React.createElement(tagName, attrs, this.state.child);
+    return React.createElement(component || tagName || 'div', attrs, this.state.child);
   }
 }
