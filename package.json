@@ -7,7 +7,7 @@
     "build": "babel src -d lib",
     "example": "browserify example/browser.js -o example/bundle.js -t babelify --debug && babel-node example/server.js",
     "format": "jsfmt -w *.js src/ test/",
-    "lint": "eslint *.js src/ test/",
+    "lint": "eslint src/ test/",
     "prepublish": "npm run build",
     "test": "karma start"
   },
@@ -28,12 +28,14 @@
   "devDependencies": {
     "babel-cli": "^6.1.1",
     "babel-core": "^6.0.20",
+    "babel-eslint": "^6.0.2",
     "babel-preset-cf": "^1.2.0",
     "babelify": "^7.2.0",
     "browserify-istanbul": "^0.2.1",
     "chai": "^3.4.1",
     "defined": "^1.0.0",
     "eslint": "^1.8.0",
+    "eslint-plugin-cflint": "^1.0.0",
     "express": "^4.13.3",
     "jsfmt": "^0.5.2",
     "karma": "^0.13.15",

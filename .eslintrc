@@ -1,5 +1,6 @@
 # vim: set ft=yaml:
 ---
+  parser: "babel-eslint"
   env:
     browser: true
     node: true
@@ -7,7 +8,6 @@
     - "cflint"
   rules:
     # Possible Errors
-    no-reserved-keys: 2
     quotes:
       - 2
       - "single"
@@ -23,9 +23,9 @@
     ## Possible that this will switch to a "2" later
     wrap-iife: 2
     # Strict Mode
-    global-strict:
-      - 2
-      - "always"
+    strict:
+      - 1
+      - "never"
     # Variables
     no-catch-shadow: 2
     # Node.js
