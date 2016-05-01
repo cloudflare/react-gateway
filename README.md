@@ -67,7 +67,7 @@ Will render as:
     <div className="item">Item 3</div>
   </section>
   <div>
-    <div className="item">Item 3</div>
+    <div className="item">Item 2</div>
   </div>
 </div>
 ```
