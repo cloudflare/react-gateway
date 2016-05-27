@@ -33,7 +33,6 @@ export default class Gateway extends React.Component {
   }
 
   renderIntoGatewayNode(props) {
-    delete props.ref;
     this.gatewayRegistry.addChild(this.props.into, props.children);
   }
 
