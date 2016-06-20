@@ -31,9 +31,7 @@ describe('Gateway', function() {
       </GatewayProvider>,
       // should equal
       <div>
-        <section>
-          <noscript/>
-        </section>
+        <section/>
         <div>Hello World</div>
       </div>
     );
@@ -75,8 +73,6 @@ describe('Gateway', function() {
       </GatewayProvider>,
       // should equal
       <div>
-        <noscript/>
-        <noscript/>
         <div>Two</div>
         <div>One</div>
       </div>
@@ -136,7 +132,6 @@ describe('Gateway', function() {
       <Application/>,
       // should equal
       <div>
-        <noscript/>
         <div>
           <span>Hello from context</span>
         </div>
