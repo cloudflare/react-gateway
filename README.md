@@ -37,10 +37,7 @@ export default class Application extends React.Component {
             <Gateway into="two">
               <div className="item">Item 2</div>
             </Gateway>
-            <Gateway into="one">
-              <div className="item">Item 3</div>
-            </Gateway>
-            <div className="item">Item 4</div>
+            <div className="item">Item 3</div>
           </div>
           <GatewayDest name="one" tagName="section" className="hello"/>
           <GatewayDest name="two"/>
@@ -59,12 +56,10 @@ Will render as:
   <div className="container">
     <noscript></noscript>
     <noscript></noscript>
-    <noscript></noscript>
-    <div className="item">Item 4</div>
+    <div className="item">Item 3</div>
   </div>
   <section className="hello">
     <div className="item">Item 1</div>
-    <div className="item">Item 3</div>
   </section>
   <div>
     <div className="item">Item 2</div>
