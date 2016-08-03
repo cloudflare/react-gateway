@@ -23,7 +23,7 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "react": "^0.14.2 || ^15.0.0-0",
-    "react-prop-types": "^0.3.0"
+    "react-prop-types": "^0.4.0"
   },
   "devDependencies": {
     "babel-cli": "^6.1.1",
