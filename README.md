@@ -39,7 +39,7 @@ export default class Application extends React.Component {
             </Gateway>
             <div className="item">Item 3</div>
           </div>
-          <GatewayDest name="one" tagName="section" className="hello"/>
+          <GatewayDest name="one" component="section" className="hello"/>
           <GatewayDest name="two"/>
         </div>
       </GatewayProvider>
