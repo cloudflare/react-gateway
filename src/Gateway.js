@@ -20,20 +20,21 @@ export default class Gateway extends React.Component {
   }
 
   componentWillMount() {
+    this.id = this.gatewayRegistry.register(this.props.into, this.props.children);
     this.renderIntoGatewayNode(this.props);
   }
 
   componentWillReceiveProps(props) {
-    this.gatewayRegistry.clearChild(this.props.into, this.props.children);
+    this.gatewayRegistry.clearChild(this.props.into, this.id);
     this.renderIntoGatewayNode(props);
   }
 
   componentWillUnmount() {
-    this.gatewayRegistry.removeChild(this.props.into, this.props.children);
+    this.gatewayRegistry.unregister(this.props.into, this.id);
   }
 
   renderIntoGatewayNode(props) {
-    this.gatewayRegistry.addChild(this.props.into, props.children);
+    this.gatewayRegistry.addChild(this.props.into, this.id, props.children);
   }
 
   render() {
