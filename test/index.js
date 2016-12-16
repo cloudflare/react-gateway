@@ -5,7 +5,8 @@ import ReactDOMServer from 'react-dom/server';
 import {
   Gateway,
   GatewayDest,
-  GatewayProvider
+  GatewayProvider,
+  GatewayRegistry
 } from '../src/index.js';
 
 function render(jsx) {
@@ -79,6 +80,40 @@ describe('Gateway', function() {
     );
   });
 
+  it('should render multiple children into a single GatewayDest', function() {
+    assertEqual(
+      <GatewayProvider>
+        <div>
+          <section>
+            <Gateway into="foo">
+              <div>One</div>
+            </Gateway>
+            <div>
+              <Gateway into="foo">
+                <div>Two</div>
+              </Gateway>
+            </div>
+            <Gateway into="foo">
+              <div>Three</div>
+            </Gateway>
+          </section>
+          <GatewayDest name="foo"/>
+        </div>
+      </GatewayProvider>,
+      // should equal
+      <div>
+        <section>
+          <div />
+        </section>
+        <div>
+          <div>One</div>
+          <div>Two</div>
+          <div>Three</div>
+        </div>
+      </div>
+    );
+  });
+
   it('should pass context', function() {
     class Child extends React.Component {
       static contextTypes = {
@@ -137,5 +172,21 @@ describe('Gateway', function() {
         </div>
       </div>
     );
+  });
+});
+
+describe('GatewayRegistry', function() {
+  describe('register', function () {
+    it('should return a gateway id', function () {
+      const gatewayRegistry = new GatewayRegistry();
+      expect(gatewayRegistry.register('test', <span />)).to.equal('test_0');
+    });
+
+    it('should increment intrernal ids', function () {
+      const gatewayRegistry = new GatewayRegistry();
+      gatewayRegistry.register('test', <span />);
+      gatewayRegistry.register('test', <span />);
+      expect(gatewayRegistry._currentId).to.equal(2);
+    });
   });
 });
