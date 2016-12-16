@@ -2,6 +2,9 @@ export default class GatewayRegistry {
   constructor() {
     this._containers = {};
     this._children = {};
+
+    // Unique key for children of a gateway
+    this._currentId = 0;
   }
 
   _renderContainer(name) {
@@ -10,7 +13,7 @@ export default class GatewayRegistry {
     }
 
     this._containers[name].setState({
-      children: Object.keys(this._children[name]).sort((a, b) => a < b).map(id => this._children[name][id])
+      children: Object.keys(this._children[name]).sort().map(id => this._children[name][id])
     });
   }
 
@@ -35,8 +38,10 @@ export default class GatewayRegistry {
   register(name, child) {
     this._children[name] = this._children[name] || {};
 
-    const gatewayId = '' + Object.keys(this._children[name]).length;
+    const gatewayId = `${name}_${this._currentId}`;
     this._children[name][gatewayId] = child;
+    this._currentId += 1;
+
     return gatewayId;
   }
 
