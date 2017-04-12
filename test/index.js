@@ -1,6 +1,7 @@
 import {expect} from 'chai';
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOMServer from 'react-dom/server';
 import {
   Gateway,
@@ -117,7 +118,7 @@ describe('Gateway', function() {
   it('should pass context', function() {
     class Child extends React.Component {
       static contextTypes = {
-        textContent: React.PropTypes.string.isRequired
+        textContent: PropTypes.string.isRequired
       };
 
       constructor(props, context) {
@@ -136,7 +137,7 @@ describe('Gateway', function() {
 
     class Parent extends React.Component {
       static childContextTypes = {
-        textContent: React.PropTypes.string.isRequired
+        textContent: PropTypes.string.isRequired
       };
 
       getChildContext() {

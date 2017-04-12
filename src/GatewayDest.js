@@ -1,18 +1,19 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import GatewayRegistry from './GatewayRegistry';
 import {deprecated} from 'react-prop-types';
 
 export default class GatewayDest extends React.Component {
   static contextTypes = {
-    gatewayRegistry: React.PropTypes.instanceOf(GatewayRegistry).isRequired
+    gatewayRegistry: PropTypes.instanceOf(GatewayRegistry).isRequired
   };
 
   static propTypes = {
-    name: React.PropTypes.string.isRequired,
-    tagName: deprecated(React.PropTypes.string, 'Use "component" instead.'),
-    component: React.PropTypes.oneOfType([
-      React.PropTypes.string,
-      React.PropTypes.func
+    name: PropTypes.string.isRequired,
+    tagName: deprecated(PropTypes.string, 'Use "component" instead.'),
+    component: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.func
     ])
   };
 
