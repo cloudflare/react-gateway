@@ -1,16 +1,17 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import GatewayRegistry from './GatewayRegistry';
 
 export default class Gateway extends React.Component {
   static contextTypes = {
-    gatewayRegistry: React.PropTypes.instanceOf(GatewayRegistry).isRequired
+    gatewayRegistry: PropTypes.instanceOf(GatewayRegistry).isRequired
   };
 
   static propTypes = {
-    into: React.PropTypes.string.isRequired,
-    children: React.PropTypes.oneOfType([
-      React.PropTypes.element,
-      React.PropTypes.string
+    into: PropTypes.string.isRequired,
+    children: PropTypes.oneOfType([
+      PropTypes.element,
+      PropTypes.string
     ])
   };
 
