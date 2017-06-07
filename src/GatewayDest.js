@@ -23,7 +23,7 @@ export default class GatewayDest extends React.Component {
   }
 
   state = {
-    child: null
+    children: null
   };
 
   componentWillMount() {
