@@ -6,7 +6,8 @@ This can be used to implement various UI components such as modals.
 See [`react-modal2`](https://github.com/cloudflare/react-modal2).
 
 It also works in universal (isomorphic) React applications without any
-additional setup.
+additional setup and in React Native applications
+[when used correctly](#react-native-example).
 
 ## Installation
 
@@ -168,3 +169,42 @@ This registry is created by `<GatewayProvider>` and passed to `<Gateway>` and
 
 Whenever a child or container is added or removed, React Gateway will
 update its internal registry and ensure things are properly rendered.
+
+## React Native example
+
+React Gateway does not directly depend on `react-dom`, so it works fine with
+React Native under one condition:
+
+**You must pass React Native component like `View` or similar to
+`component` prop of `<GatewayDest>`.**
+
+Because if you don't, `<GatewayDest>` will try to render `div` element, which
+is not available.
+
+```js
+import React from 'react';
+import { Text, View } from 'react-native';
+import {
+  Gateway,
+  GatewayDest,
+  GatewayProvider
+} from 'react-gateway';
+
+export default class Application extends React.Component {
+  render() {
+    return (
+      <GatewayProvider>
+        <View>
+          <Text>React Gateway Native Example</Text>
+          <View>
+            <Gateway into="one">
+              <Text>Text rendered elsewhere</Text>
+            </Gateway>
+          </View>
+          <GatewayDest name="one" component={View} />
+        </View>
+      </GatewayProvider>
+    );
+  }
+}
+```
