@@ -23,7 +23,6 @@
   "license": "BSD-3-Clause",
   "dependencies": {
     "prop-types": "^15.5.0",
-    "react": "^0.14.2 || ^15.0.0-0",
     "react-prop-types": "^0.4.0"
   },
   "devDependencies": {
@@ -53,6 +52,10 @@
     "minimist": "^1.2.0",
     "mocha": "^2.3.3",
     "react-addons-test-utils": "^15.0.0-0",
+    "react": "^15.0.0-0",
     "react-dom": "^15.0.0-0"
+  },
+  "peerDependencies": {
+    "react": "^0.14.0 || ^15.0.0 || ^16.0.0"
   }
 }
