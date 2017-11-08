@@ -22,8 +22,10 @@ export default class GatewayRegistry {
     this._renderContainer(name);
   }
 
-  removeContainer(name) {
-    this._containers[name] = null;
+  removeContainer(name, container) {
+    if (this._containers[name] === container) {
+      this._containers[name] = null;
+    }
   }
 
   addChild(name, gatewayId, child) {
