@@ -9,10 +9,7 @@ export default class Gateway extends React.Component {
 
   static propTypes = {
     into: PropTypes.string.isRequired,
-    children: PropTypes.oneOfType([
-      PropTypes.element,
-      PropTypes.string
-    ])
+    children: PropTypes.node
   };
 
   constructor(props, context) {
@@ -21,7 +18,10 @@ export default class Gateway extends React.Component {
   }
 
   componentWillMount() {
-    this.id = this.gatewayRegistry.register(this.props.into, this.props.children);
+    this.id = this.gatewayRegistry.register(
+      this.props.into,
+      this.props.children
+    );
     this.renderIntoGatewayNode(this.props);
   }
 
