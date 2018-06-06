@@ -176,6 +176,69 @@ describe('Gateway', function() {
   });
 });
 
+describe('GatewayDest', function(){
+  it('should render div w/ className and component', function(){
+    class Application extends React.Component {
+      render() {
+        return (
+          <GatewayProvider>
+            <div>
+              <GatewayDest name="dest" className="something" component="span"/>
+            </div>
+          </GatewayProvider>
+        );
+      }
+    }
+    assertEqual(
+      <Application/>,
+      // should equal
+      <div>
+        <span className="something" />
+      </div>
+    );
+  });
+  it('should not render when no Gateways are registered and "unmountOnEmpty" is set ', function(){
+    class Application extends React.Component {
+      render() {
+        return (
+          <GatewayProvider>
+            <div>
+              <GatewayDest name="dest" unmountOnEmpty/>
+            </div>
+          </GatewayProvider>
+        );
+      }
+    }
+    assertEqual(
+      <Application/>,
+      // should equal
+      <div>
+      </div>
+    );
+  });
+  it('should render when there are Gateways are registered and "unmountOnEmpty" is set ', function(){
+    class Application extends React.Component {
+      render() {
+        return (
+          <GatewayProvider>
+            <div>
+              <Gateway into="dest">hello</Gateway>
+              <GatewayDest name="dest" unmountOnEmpty/>
+            </div>
+          </GatewayProvider>
+        );
+      }
+    }
+    assertEqual(
+      <Application/>,
+      // should equal
+      <div>
+        <div>hello</div>
+      </div>
+    );
+  });
+});
+
 describe('GatewayRegistry', function() {
   describe('register', function () {
     it('should return a gateway id', function () {

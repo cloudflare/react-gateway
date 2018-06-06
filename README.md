@@ -115,6 +115,8 @@ name.
     }
   }
 ```
+You could also add an `unmountOnEmpty` option to prevent a `GatewayDest` element from rendering if 
+there are no `<Gateway into>` match for a `<GatewayDest name>`.
 
 Then in any of your components (that get rendered inside of the
 `<GatewayProvider>`) add a `<Gateway>`.
