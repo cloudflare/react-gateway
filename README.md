@@ -201,7 +201,7 @@ export default class Application extends React.Component {
               <Text>Text rendered elsewhere</Text>
             </Gateway>
           </View>
-          <GatewayDest name="one" component={View} />
+          <GatewayDest name="one" component={ props => <View { ...props } /> }/>
         </View>
       </GatewayProvider>
     );
