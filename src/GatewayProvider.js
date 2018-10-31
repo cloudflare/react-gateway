@@ -8,6 +8,6 @@ export default class GatewayProvider extends React.Component {
   gatewayRegistry = new GatewayRegistry();
 
   render() {
-    return <GatewayContext.Provider value={{ gatewayRegistry: this.gatewayRegistry }}>{this.props.children}</GatewayContext.Provider>
+    return <GatewayContext.Provider value={{ gatewayRegistry: this.gatewayRegistry }}>{this.props.children}</GatewayContext.Provider>;
   }
 }

@@ -1,9 +1,22 @@
 import React from 'react';
-import { GatewayContext } from './GatewayProvider';
+import {GatewayContext} from './GatewayProvider';
+import {GatewayRegistry} from './GatewayRegistry';
+import PropTypes from 'prop-types';
+import {deprecated} from 'react-prop-types';
 
 class GatewayDestImpl extends React.Component {
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+    tagName: deprecated(PropTypes.string, 'Use "component" instead.'),
+    component: PropTypes.oneOfType([
+      PropTypes.string,
+      PropTypes.func
+    ]),
+    gatewayRegistry: PropTypes.instanceOf(GatewayRegistry).isRequired
+  };
+
   state = {
-    children: null,
+    children: null
   };
 
   componentDidMount() {
@@ -17,11 +30,7 @@ class GatewayDestImpl extends React.Component {
   render() {
     const { component, tagName, gatewayRegistry, ...attrs } = this.props;
     delete attrs.name;
-    return React.createElement(
-      component || tagName || 'div',
-      attrs,
-      this.state.children
-    );
+    return React.createElement(component || tagName || 'div', attrs, this.state.children);
   }
 }
 

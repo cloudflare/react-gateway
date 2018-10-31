@@ -1,7 +1,14 @@
 import React from 'react';
-import { GatewayContext } from './GatewayProvider';
+import PropTypes from 'prop-types';
+import {GatewayContext} from './GatewayProvider';
+import {GatewayRegistry} from './GatewayRegistry';
 
 class GatewayImpl extends React.Component {
+  static propTypes = {
+    children: PropTypes.node,
+    gatewayRegistry: PropTypes.instanceOf(GatewayRegistry).isRequired
+  };
+
   componentDidMount() {
     this.id = this.props.gatewayRegistry.register(
       this.props.into,
