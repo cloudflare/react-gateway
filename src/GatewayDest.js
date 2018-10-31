@@ -1,42 +1,45 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+import {GatewayContext} from './GatewayProvider';
 import GatewayRegistry from './GatewayRegistry';
+import PropTypes from 'prop-types';
 import {deprecated} from 'react-prop-types';
 
-export default class GatewayDest extends React.Component {
-  static contextTypes = {
-    gatewayRegistry: PropTypes.instanceOf(GatewayRegistry).isRequired
-  };
-
+class GatewayDestImpl extends React.Component {
   static propTypes = {
     name: PropTypes.string.isRequired,
     tagName: deprecated(PropTypes.string, 'Use "component" instead.'),
     component: PropTypes.oneOfType([
       PropTypes.string,
       PropTypes.func
-    ])
+    ]),
+    gatewayRegistry: PropTypes.instanceOf(GatewayRegistry).isRequired
   };
-
-  constructor(props, context) {
-    super(props, context);
-    this.gatewayRegistry = context.gatewayRegistry;
-  }
 
   state = {
     children: null
   };
 
-  componentWillMount() {
-    this.gatewayRegistry.addContainer(this.props.name, this);
+  componentDidMount() {
+    this.props.gatewayRegistry.addContainer(this.props.name, this);
   }
 
   componentWillUnmount() {
-    this.gatewayRegistry.removeContainer(this.props.name, this);
+    this.props.gatewayRegistry.removeContainer(this.props.name, this);
   }
 
   render() {
-    const { component, tagName, ...attrs } = this.props;
+    const { component, tagName, gatewayRegistry, ...attrs } = this.props;
     delete attrs.name;
     return React.createElement(component || tagName || 'div', attrs, this.state.children);
   }
 }
+
+export default (props) => {
+  return (
+    <GatewayContext.Consumer>
+      {({ gatewayRegistry }) => (
+        <GatewayDestImpl gatewayRegistry={gatewayRegistry} {...props} />
+      )}
+    </GatewayContext.Consumer>
+  );
+};
