@@ -1,6 +1,6 @@
 import React from 'react';
 import {GatewayContext} from './GatewayProvider';
-import {GatewayRegistry} from './GatewayRegistry';
+import GatewayRegistry from './GatewayRegistry';
 import PropTypes from 'prop-types';
 import {deprecated} from 'react-prop-types';
 
