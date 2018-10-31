@@ -5,6 +5,7 @@ import {GatewayRegistry} from './GatewayRegistry';
 
 class GatewayImpl extends React.Component {
   static propTypes = {
+    into: PropTypes.string.isRequired,
     children: PropTypes.node,
     gatewayRegistry: PropTypes.instanceOf(GatewayRegistry).isRequired
   };
