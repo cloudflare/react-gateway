@@ -9,6 +9,7 @@ export default class GatewayDest extends React.Component {
   };
 
   static propTypes = {
+    noWrapper: PropTypes.bool,
     name: PropTypes.string.isRequired,
     tagName: deprecated(PropTypes.string, 'Use "component" instead.'),
     component: PropTypes.oneOfType([
@@ -35,8 +36,11 @@ export default class GatewayDest extends React.Component {
   }
 
   render() {
-    const { component, tagName, ...attrs } = this.props;
+    const { component, tagName, noWrapper, ...attrs } = this.props;
     delete attrs.name;
+    if ( noWrapper ) {
+      return this.state.children;
+    }
     return React.createElement(component || tagName || 'div', attrs, this.state.children);
   }
 }
