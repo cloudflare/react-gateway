@@ -1,14 +1,9 @@
-import {expect} from 'chai';
+import { expect } from 'chai';
 
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOMServer from 'react-dom/server';
-import {
-  Gateway,
-  GatewayDest,
-  GatewayProvider,
-  GatewayRegistry
-} from '../src/index.js';
+import { Gateway, GatewayDest, GatewayProvider, GatewayRegistry} from '../src/index.js';
 
 function render(jsx) {
   return ReactDOMServer.renderToStaticMarkup(jsx);
@@ -131,7 +126,7 @@ describe('Gateway', function() {
           <Gateway into="dest">
             <span>{this.textContent}</span>
           </Gateway>
-        );
+          );
       }
     }
 
@@ -160,7 +155,7 @@ describe('Gateway', function() {
               <GatewayDest name="dest"/>
             </div>
           </GatewayProvider>
-        );
+          );
       }
     }
 
@@ -177,13 +172,13 @@ describe('Gateway', function() {
 });
 
 describe('GatewayRegistry', function() {
-  describe('register', function () {
-    it('should return a gateway id', function () {
+  describe('register', function() {
+    it('should return a gateway id', function() {
       const gatewayRegistry = new GatewayRegistry();
       expect(gatewayRegistry.register('test', <span />)).to.equal('test_0');
     });
 
-    it('should increment intrernal ids', function () {
+    it('should increment intrernal ids', function() {
       const gatewayRegistry = new GatewayRegistry();
       gatewayRegistry.register('test', <span />);
       gatewayRegistry.register('test', <span />);

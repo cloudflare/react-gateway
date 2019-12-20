@@ -109,10 +109,10 @@ module.exports = function(config) {
       transform: [
         'babelify'
       ].concat(args.istanbul && [
-        ['browserify-istanbul', {
-          ignore: ['**/*.handlebars']
-        }]
-      ] || [])
+          ['browserify-istanbul', {
+            ignore: ['**/*.handlebars']
+          }]
+        ] || [])
     },
 
     coverageReporter: {
