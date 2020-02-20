@@ -118,11 +118,6 @@ describe('GatewayDest', function () {
       <Application />
     );
     expect(rendered).toMatchSnapshot();
-    // should equal
-    // <div>
-    //   <span className="something" />
-    // </div>
-    // );
   });
 
   it('should not render when no Gateways are registered and "unmountOnEmpty" is set ', function () {
@@ -141,10 +136,6 @@ describe('GatewayDest', function () {
       <Application />
     );
     expect(rendered).toMatchSnapshot();
-    // // should equal
-    // <div>
-    // </div>
-    // );
   });
 
   it('should render when there are Gateways are registered and "unmountOnEmpty" is set ', function () {
@@ -164,11 +155,6 @@ describe('GatewayDest', function () {
       <Application />
     );
     expect(rendered).toMatchSnapshot();
-    // should equal
-    //<div>
-    //  <div>hello</div>
-    //</div>
-    //);
   });
 });
 
