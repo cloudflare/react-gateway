@@ -1,44 +1,30 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import GatewayRegistry from './GatewayRegistry';
-import {deprecated} from 'react-prop-types';
+import GatewayContext from './GatewayContext';
 
-export default class GatewayDest extends React.Component {
-  static contextTypes = {
-    gatewayRegistry: PropTypes.instanceOf(GatewayRegistry).isRequired
-  };
+function GatewayDest({ name, component, unmountOnEmpty, ...attrs }) {
+  const gatewayRegistry = useContext(GatewayContext);
+  const [children, setChildren] = useState(null)
 
-  static propTypes = {
-    name: PropTypes.string.isRequired,
-    tagName: deprecated(PropTypes.string, 'Use "component" instead.'),
-    component: PropTypes.oneOfType([
-      PropTypes.string,
-      PropTypes.func
-    ])
-  };
+  useEffect(() => {
+    gatewayRegistry.addContainer(name, setChildren)
+    return () => {
+      gatewayRegistry.removeContainer(name)
+    }
+  }, []);
 
-  constructor(props, context) {
-    super(props, context);
-    this.gatewayRegistry = context.gatewayRegistry;
-  }
-
-  state = {
-    children: null
-  };
-
-  componentWillMount() {
-    this.gatewayRegistry.addContainer(this.props.name, this);
-  }
-
-  componentWillUnmount() {
-    this.gatewayRegistry.removeContainer(this.props.name, this);
-  }
-
-  render() {
-    const { component, tagName, unmountOnEmpty, ...attrs } = this.props;
-    delete attrs.name;
-    return unmountOnEmpty && !this.state.children
-      ? null
-      : React.createElement(component || tagName || 'div', attrs, this.state.children);
-  }
+  return unmountOnEmpty && !children
+    ? null
+    : React.createElement(component || 'div', attrs, children);
 }
+
+GatewayDest.propTypes = {
+  name: PropTypes.string.isRequired,
+  component: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.func
+  ]),
+  unmountOnEmpty: PropTypes.bool
+}
+
+export default GatewayDest;

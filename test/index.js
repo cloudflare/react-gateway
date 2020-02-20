@@ -1,7 +1,5 @@
-import {expect} from 'chai';
-
 import React from 'react';
-import PropTypes from 'prop-types';
+import { create, act } from 'react-test-renderer';
 import ReactDOMServer from 'react-dom/server';
 import {
   Gateway,
@@ -10,247 +8,182 @@ import {
   GatewayRegistry
 } from '../src/index.js';
 
-function render(jsx) {
-  return ReactDOMServer.renderToStaticMarkup(jsx);
-}
-
-function assertEqual(actual, expected) {
-  expect(render(actual)).to.equal(render(expected));
-}
-
-describe('Gateway', function() {
-  it('should render Gateway in GatewayDest', function() {
-    assertEqual(
-      <GatewayProvider>
-        <div>
-          <section>
-            <Gateway into="foo">
-              Hello World
+describe('Gateway', function () {
+  it('should render Gateway in GatewayDest', function () {
+    let rendered;
+    act(() => {
+      rendered = create(
+        <GatewayProvider>
+          <div>
+            <section>
+              <Gateway into="foo">
+                Hello World
             </Gateway>
-          </section>
-          <GatewayDest name="foo"/>
-        </div>
-      </GatewayProvider>,
-      // should equal
-      <div>
-        <section/>
-        <div>Hello World</div>
-      </div>
-    );
+            </section>
+            <GatewayDest name="foo" />
+          </div>
+        </GatewayProvider>
+      );
+    });
+    expect(rendered).toMatchSnapshot();
   });
 
-  it('should be able to customize the GatewayDest element', function() {
-    assertEqual(
-      <GatewayProvider>
-        <GatewayDest component="section" className="elf" id="striped" name="foo"/>
-      </GatewayProvider>,
-      // should equal
-      <section className="elf" id="striped"/>
-    );
+  it('should be able to customize the GatewayDest element', function () {
+    let rendered;
+
+    act(() => {
+      rendered = create(
+        <GatewayProvider>
+          <GatewayDest component="section" className="elf" id="striped" name="foo" />
+        </GatewayProvider>,
+      );
+    })
+    expect(rendered).toMatchSnapshot();
   });
 
-  it('should be able to customize the GatewayDest with custom components', function() {
+  it('should be able to customize the GatewayDest with custom components', function () {
     function Child(props) {
       return <h1 id={props.id}>{props.children}</h1>;
     }
-
-    assertEqual(
-      <GatewayProvider>
-        <GatewayDest component={Child} id="test" name="foo"/>
-      </GatewayProvider>,
-      // should equal
-      <Child id="test"/>
-    );
+    let rendered;
+    act(() => {
+      rendered = create(
+        <GatewayProvider>
+          <GatewayDest component={Child} id="test" name="foo" />
+        </GatewayProvider>
+      );
+    });
+    expect(rendered).toMatchSnapshot();
   });
 
-  it('should render into the correct GatewayDest', function() {
-    assertEqual(
-      <GatewayProvider>
-        <div>
-          <Gateway into="foo">One</Gateway>
-          <Gateway into="bar">Two</Gateway>
-          <GatewayDest name="bar"/>
-          <GatewayDest name="foo"/>
-        </div>
-      </GatewayProvider>,
-      // should equal
-      <div>
-        <div>Two</div>
-        <div>One</div>
-      </div>
-    );
+  it('should render into the correct GatewayDest', function () {
+    let rendered;
+    act(() => {
+      rendered = create(
+        <GatewayProvider>
+          <div>
+            <Gateway into="foo">One</Gateway>
+            <Gateway into="bar">Two</Gateway>
+            <GatewayDest name="bar" />
+            <GatewayDest name="foo" />
+          </div>
+        </GatewayProvider>
+      );
+    });
+    expect(rendered).toMatchSnapshot();
   });
 
-  it('should render multiple children into a single GatewayDest', function() {
-    assertEqual(
-      <GatewayProvider>
-        <div>
-          <section>
-            <Gateway into="foo">
-              <div>One</div>
-            </Gateway>
-            <div>
+  it('should render multiple children into a single GatewayDest', function () {
+    let rendered;
+    act(() => {
+      rendered = create(
+        <GatewayProvider>
+          <div>
+            <section>
               <Gateway into="foo">
-                <div>Two</div>
+                <div>One</div>
               </Gateway>
-            </div>
-            <Gateway into="foo">
-              <div>Three</div>
-            </Gateway>
-          </section>
-          <GatewayDest name="foo"/>
-        </div>
-      </GatewayProvider>,
-      // should equal
-      <div>
-        <section>
-          <div />
-        </section>
-        <div>
-          <div>One</div>
-          <div>Two</div>
-          <div>Three</div>
-        </div>
-      </div>
-    );
-  });
-
-  it('should pass context', function() {
-    class Child extends React.Component {
-      static contextTypes = {
-        textContent: PropTypes.string.isRequired
-      };
-
-      constructor(props, context) {
-        super(props, context);
-        this.textContent = context.textContent;
-      }
-
-      render() {
-        return (
-          <Gateway into="dest">
-            <span>{this.textContent}</span>
-          </Gateway>
-        );
-      }
-    }
-
-    class Parent extends React.Component {
-      static childContextTypes = {
-        textContent: PropTypes.string.isRequired
-      };
-
-      getChildContext() {
-        return {
-          textContent: 'Hello from context'
-        };
-      }
-
-      render() {
-        return <Child/>;
-      }
-    }
-
-    class Application extends React.Component {
-      render() {
-        return (
-          <GatewayProvider>
-            <div>
-              <Parent/>
-              <GatewayDest name="dest"/>
-            </div>
-          </GatewayProvider>
-        );
-      }
-    }
-
-    assertEqual(
-      <Application/>,
-      // should equal
-      <div>
-        <div>
-          <span>Hello from context</span>
-        </div>
-      </div>
-    );
+              <div>
+                <Gateway into="foo">
+                  <div>Two</div>
+                </Gateway>
+              </div>
+              <Gateway into="foo">
+                <div>Three</div>
+              </Gateway>
+            </section>
+            <GatewayDest name="foo" />
+          </div>
+        </GatewayProvider>
+      );
+    });
+    expect(rendered).toMatchSnapshot();
   });
 });
 
-describe('GatewayDest', function(){
-  it('should render div w/ className and component', function(){
+describe('GatewayDest', function () {
+  it('should render div w/ className and component', function () {
     class Application extends React.Component {
       render() {
         return (
           <GatewayProvider>
             <div>
-              <GatewayDest name="dest" className="something" component="span"/>
+              <GatewayDest name="dest" className="something" component="span" />
             </div>
           </GatewayProvider>
         );
       }
     }
-    assertEqual(
-      <Application/>,
-      // should equal
-      <div>
-        <span className="something" />
-      </div>
+    const rendered = create(
+      <Application />
     );
+    expect(rendered).toMatchSnapshot();
+    // should equal
+    // <div>
+    //   <span className="something" />
+    // </div>
+    // );
   });
-  it('should not render when no Gateways are registered and "unmountOnEmpty" is set ', function(){
+
+  it('should not render when no Gateways are registered and "unmountOnEmpty" is set ', function () {
     class Application extends React.Component {
       render() {
         return (
           <GatewayProvider>
             <div>
-              <GatewayDest name="dest" unmountOnEmpty/>
+              <GatewayDest name="dest" unmountOnEmpty />
             </div>
           </GatewayProvider>
         );
       }
     }
-    assertEqual(
-      <Application/>,
-      // should equal
-      <div>
-      </div>
+    const rendered = create(
+      <Application />
     );
+    expect(rendered).toMatchSnapshot();
+    // // should equal
+    // <div>
+    // </div>
+    // );
   });
-  it('should render when there are Gateways are registered and "unmountOnEmpty" is set ', function(){
+
+  it('should render when there are Gateways are registered and "unmountOnEmpty" is set ', function () {
     class Application extends React.Component {
       render() {
         return (
           <GatewayProvider>
             <div>
               <Gateway into="dest">hello</Gateway>
-              <GatewayDest name="dest" unmountOnEmpty/>
+              <GatewayDest name="dest" unmountOnEmpty />
             </div>
           </GatewayProvider>
         );
       }
     }
-    assertEqual(
-      <Application/>,
-      // should equal
-      <div>
-        <div>hello</div>
-      </div>
+    const rendered = create(
+      <Application />
     );
+    expect(rendered).toMatchSnapshot();
+    // should equal
+    //<div>
+    //  <div>hello</div>
+    //</div>
+    //);
   });
 });
 
-describe('GatewayRegistry', function() {
+describe('GatewayRegistry', function () {
   describe('register', function () {
     it('should return a gateway id', function () {
       const gatewayRegistry = new GatewayRegistry();
-      expect(gatewayRegistry.register('test', <span />)).to.equal('test_0');
+      expect(gatewayRegistry.register('test', <span />)).toEqual('test_0');
     });
 
     it('should increment intrernal ids', function () {
       const gatewayRegistry = new GatewayRegistry();
       gatewayRegistry.register('test', <span />);
       gatewayRegistry.register('test', <span />);
-      expect(gatewayRegistry._currentId).to.equal(2);
+      expect(gatewayRegistry._currentId).toEqual(2);
     });
   });
 });
