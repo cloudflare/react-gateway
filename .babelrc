@@ -1,4 +1,10 @@
 {
-  "presets": ["cf"],
-  "plugins": []
+  "presets": [
+    "@babel/env",
+    "@babel/react"
+  ],
+  "plugins": [
+    "@babel/plugin-proposal-export-default-from",
+    "@babel/plugin-proposal-class-properties"
+  ]
 }
