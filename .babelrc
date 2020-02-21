@@ -1,10 +1,18 @@
 {
   "presets": [
     "@babel/env",
-    "@babel/react"
+    "@babel/react",
+    "@babel/flow"
   ],
   "plugins": [
     "@babel/plugin-proposal-export-default-from",
     "@babel/plugin-proposal-class-properties"
-  ]
+  ],
+  "env":{
+    "test":{
+      "plugins": [
+        "@babel/plugin-transform-runtime"
+      ]
+    }
+  }
 }

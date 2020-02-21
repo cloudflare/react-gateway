@@ -3,17 +3,17 @@ import PropTypes from 'prop-types';
 import GatewayContext from './GatewayContext';
 
 function GatewayDest({ name, component, unmountOnEmpty, ...attrs }) {
-  const gatewayRegistry = useContext(GatewayContext);
-  const [children, setChildren] = useState(null)
+  const {addContainer, removeContainer, getContainerChildren} = useContext(GatewayContext);
+  const children = getContainerChildren(name);
 
   useEffect(() => {
-    gatewayRegistry.addContainer(name, setChildren)
+    addContainer(name);
     return () => {
-      gatewayRegistry.removeContainer(name)
-    }
+      removeContainer(name);
+    };
   }, []);
 
-  return unmountOnEmpty && !children
+  return unmountOnEmpty && !children.length
     ? null
     : React.createElement(component || 'div', attrs, children);
 }
@@ -25,6 +25,6 @@ GatewayDest.propTypes = {
     PropTypes.func
   ]),
   unmountOnEmpty: PropTypes.bool
-}
+};
 
 export default GatewayDest;

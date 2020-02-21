@@ -8,30 +8,20 @@ import PropTypes from 'prop-types';
 import GatewayContext from './GatewayContext';
 
 function Gateway({ into, children }) {
-  const [gatewayId, setGatewayId] = useState(null)
-  const gatewayRegistry = useContext(GatewayContext);
+  const [gatewayId, setGatewayId] = useState(null);
+  const { addGateway, removeGateway, updateGateway } = useContext(GatewayContext);
 
   useEffect(() => {
-    setGatewayId(
-      gatewayRegistry.register(into, children)
-    );
+    addGateway(into, children, setGatewayId);
     return () => {
-      gatewayRegistry.unregister(into, gatewayId);
-    }
+      removeGateway(gatewayId);
+    };
   }, []);
 
   useEffect(() => {
-    if (gatewayId) {
-      gatewayRegistry.addChild(into, gatewayId, children);
-    }
-  }, [gatewayId])
-
-  useEffect(() => {
-    return () => {
-      gatewayRegistry.clearChild(into, gatewayId)
-      gatewayRegistry.addChild(into, gatewayId, children);
-    }
-  }, [into, children]);
+    if (!gatewayId) { return; }
+    updateGateway(gatewayId, children);
+  }, [gatewayId, children]);
 
   return null;
 }
@@ -39,6 +29,6 @@ function Gateway({ into, children }) {
 Gateway.propTypes = {
   into: PropTypes.string.isRequired,
   children: PropTypes.node
-}
+};
 
 export default Gateway;

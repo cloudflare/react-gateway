@@ -1,12 +1,26 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { create, act } from 'react-test-renderer';
 import ReactDOMServer from 'react-dom/server';
 import {
   Gateway,
   GatewayDest,
   GatewayProvider,
-  GatewayRegistry
+  GatewayRegistry,
 } from '../src/index.js';
+import GatewayContext from '../src/GatewayContext';
+
+const withExposedSetState = (Component) => {
+  let setState;
+  let setSetState = (setStateParam) => {
+    setState = setStateParam;
+  };
+  return {
+    setState: (state) => {
+      setState(state);
+    },
+    Component: (props) => <Component setSetState={setSetState} {...props} />
+  };
+};
 
 describe('Gateway', function () {
   it('should render Gateway in GatewayDest', function () {
@@ -37,7 +51,7 @@ describe('Gateway', function () {
           <GatewayDest component="section" className="elf" id="striped" name="foo" />
         </GatewayProvider>,
       );
-    })
+    });
     expect(rendered).toMatchSnapshot();
   });
 
@@ -99,6 +113,32 @@ describe('Gateway', function () {
     });
     expect(rendered).toMatchSnapshot();
   });
+
+  it('should update Gateway child', async function () {
+    let rendered;
+    const { Component, setState } = withExposedSetState(({ setSetState }) => {
+      const [text, setText] = useState('Hello world');
+      setSetState(setText);
+      return (
+        <GatewayProvider>
+          <div>
+            <Gateway into="dest">{text}</Gateway>
+            <GatewayDest name="dest" />
+          </div>
+        </GatewayProvider>
+      );
+    });
+
+    act(() => {
+      rendered = create(<Component />);
+    });
+    expect(rendered).toMatchSnapshot();
+
+    act(() => {
+      setState('world');
+    });
+    expect(rendered).toMatchSnapshot();
+  });
 });
 
 describe('GatewayDest', function () {
@@ -121,29 +161,42 @@ describe('GatewayDest', function () {
   });
 
   describe('prop unmountOnEmpty', function () {
-    it('should not render when no Gateways are registered and "unmountOnEmpty" is set ', function () {
-      class Application extends React.Component {
-        render() {
-          return (
-            <GatewayProvider>
-              <div>
-                <GatewayDest name="dest" unmountOnEmpty />
-              </div>
-            </GatewayProvider>
-          );
-        }
-      }
 
-      let rendered;
+    let rendered;
+    const { Component, setState } = withExposedSetState(({ setSetState }) => {
+      const [showOneChild, setShowOne] = useState(false);
+      setSetState(setShowOne);
+
+      return (
+        <GatewayProvider>
+          <div>
+            <GatewayDest name="dest" unmountOnEmpty />
+            {showOneChild && <Gateway into="dest">Hello world</Gateway>}
+          </div>
+        </GatewayProvider>
+      );
+    });
+
+    beforeAll(function () {
       act(() => {
         rendered = create(
-          <Application />
+          <Component />
         );
+      });
+    });
+
+    it('should not render when no Gateways are registered and "unmountOnEmpty" is set ', function () {
+      expect(rendered).toMatchSnapshot();
+    });
+
+    it('GatewayDest should render child Gateways on update', function () {
+      act(() => {
+        setState(true);
       });
       expect(rendered).toMatchSnapshot();
     });
 
-    it('should render when there are Gateways are registered and "unmountOnEmpty" is set ', function () {
+    it('should render when there are Gateways registered and "unmountOnEmpty" is set ', function () {
       class Application extends React.Component {
         render() {
           return (
@@ -156,26 +209,45 @@ describe('GatewayDest', function () {
           );
         }
       }
-      const rendered = create(
-        <Application />
-      );
+      let rendered;
+      act(() => {
+        rendered = create(
+          <Application />
+        );
+      });
       expect(rendered).toMatchSnapshot();
     });
   });
 });
 
-describe('GatewayRegistry', function () {
-  describe('register', function () {
+describe.skip('GatewayRegistry', function () {
+  let gatewayRegistry;
+  beforeEach(() => {
+    gatewayRegistry = new GatewayRegistry();
+  });
+  describe('registerGateway', function () {
+    it('should not allow \'into\' to have ##', function () {
+      const shouldThrow = () => {
+        gatewayRegistry.registerGateway('test##', <span />);
+      };
+      expect(shouldThrow).toThrow();
+    });
     it('should return a gateway id', function () {
-      const gatewayRegistry = new GatewayRegistry();
-      expect(gatewayRegistry.register('test', <span />)).toEqual('test_0');
+      expect(gatewayRegistry.registerGateway('test', <span />)).toEqual('test##0');
     });
 
     it('should increment intrernal ids', function () {
-      const gatewayRegistry = new GatewayRegistry();
-      gatewayRegistry.register('test', <span />);
-      gatewayRegistry.register('test', <span />);
+      gatewayRegistry.registerGateway('test', <span />);
+      gatewayRegistry.registerGateway('test', <span />);
       expect(gatewayRegistry._currentId).toEqual(2);
+    });
+  });
+  describe('unregisterGateway', function () {
+    it('should remove registered child', function () {
+      const gatewayId = gatewayRegistry.registerGateway('test', <span />);
+      expect(gatewayRegistry.childCount('test')).toBe(1);
+      gatewayRegistry.unregisterGateway(gatewayId);
+      expect(gatewayRegistry.childCount('test')).toBe(0);
     });
   });
 });

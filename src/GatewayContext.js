@@ -1,10 +1,5 @@
 import { createContext } from 'react';
-import GatewayRegistry from './GatewayRegistry';
 
-const gatewayRegistry = new GatewayRegistry();
-const GatewayContext = createContext(gatewayRegistry);
+const GatewayContext = createContext({});
 
-export {
-	GatewayContext as default,
-	gatewayRegistry,
-};
+export default GatewayContext;
