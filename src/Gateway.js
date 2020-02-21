@@ -12,7 +12,12 @@ function Gateway({ into, children }) {
   const { addGateway, removeGateway, updateGateway } = useContext(GatewayContext);
 
   useEffect(() => {
-    addGateway(into, children, setGatewayId);
+    let gatewayId;
+    const onSetGatewayId = (gatewayIdParam) => {
+      gatewayId = gatewayIdParam;
+      setGatewayId(gatewayIdParam);
+    };
+    addGateway(into, children, onSetGatewayId);
     return () => {
       removeGateway(gatewayId);
     };

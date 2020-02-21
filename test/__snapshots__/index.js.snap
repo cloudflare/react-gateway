@@ -68,6 +68,12 @@ exports[`Gateway should update Gateway child 2`] = `
 </div>
 `;
 
+exports[`Gateway should update Gateway child 3`] = `
+<div>
+  <div />
+</div>
+`;
+
 exports[`GatewayDest prop unmountOnEmpty GatewayDest should render child Gateways on update 1`] = `
 <div>
   <div>
@@ -93,3 +99,5 @@ exports[`GatewayDest should render div w/ className and component 1`] = `
   />
 </div>
 `;
+
+exports[`GatewayDest should render div w/ className and component 2`] = `<div />`;

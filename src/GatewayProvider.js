@@ -5,7 +5,7 @@ import GatewayContext from './GatewayContext';
 function GatewayProvider({ children }) {
 	const [_, setCurrentId] = useState(0);
 	const [gateways, setGateways] = useState({});
-	const [__, setContainer] = useState({});
+	const [containers, setContainer] = useState({});
 
 	const addGateway = (destName, child, setGatewayId) => {
 		verifyDestNameValid(destName);
@@ -21,14 +21,26 @@ function GatewayProvider({ children }) {
 		});
 	};
 
-	const removeGateway = () => { };
+	const removeGateway = (gatewayId) => {
+		setGateways(prevGateways => ({
+			...prevGateways,
+			[gatewayId]: undefined,
+		}));
+		const [destName] = getDestNameAndChildId(gatewayId);
+		containers[destName] && containers[destName](
+			getContainerChildren(destName)
+		);
+	};
+
 	const updateGateway = (gatewayId, child) => {
 		setGateways(prevGateways => ({
 			...prevGateways,
 			[gatewayId]: child
 		}));
 	};
+
 	const addContainer = (name, setContainerChildren) => {
+		verifyDestNameValid(name);
 		setContainer(prevContainers => ({
 			...prevContainers,
 			[name]: setContainerChildren
@@ -79,7 +91,7 @@ function getDestNameAndChildId(gatewayId) {
 
 function verifyDestNameValid(destName) {
 	if (destName.indexOf('##') != -1) {
-		throw new Error('into should not have ##');
+		throw new Error('dest names should not have ##');
 	}
 }
 

@@ -23,6 +23,22 @@ const withExposedSetState = (Component) => {
 };
 
 describe('Gateway', function () {
+  it('throws on invalid dest name', function () {
+    const throwingRender = () => {
+      act(() => {
+        create(
+          <GatewayProvider>
+            <div>
+              <GatewayDest name="invaid##" />
+              <Gateway into="invaid##" />
+            </div>
+          </GatewayProvider>
+        );
+      });
+    };
+    expect(throwingRender).toThrow('dest names should not have ##');
+  });
+
   it('should render Gateway in GatewayDest', function () {
     let rendered;
     act(() => {
@@ -117,12 +133,12 @@ describe('Gateway', function () {
   it('should update Gateway child', async function () {
     let rendered;
     const { Component, setState } = withExposedSetState(({ setSetState }) => {
-      const [text, setText] = useState('Hello world');
-      setSetState(setText);
+      const [{ text, showChild }, setState] = useState({ text: 'Hello world', showChild: true });
+      setSetState(setState);
       return (
         <GatewayProvider>
           <div>
-            <Gateway into="dest">{text}</Gateway>
+            {showChild && <Gateway into="dest">{text}</Gateway>}
             <GatewayDest name="dest" />
           </div>
         </GatewayProvider>
@@ -135,7 +151,12 @@ describe('Gateway', function () {
     expect(rendered).toMatchSnapshot();
 
     act(() => {
-      setState('world');
+      setState({ text: 'world', showChild: true });
+    });
+    expect(rendered).toMatchSnapshot();
+
+    act(() => {
+      setState({ showChild: false });
     });
     expect(rendered).toMatchSnapshot();
   });
@@ -143,21 +164,40 @@ describe('Gateway', function () {
 
 describe('GatewayDest', function () {
   it('should render div w/ className and component', function () {
-    class Application extends React.Component {
-      render() {
-        return (
+    const { Component, setState } = withExposedSetState(({ setSetState }) => {
+      const [shouldShow, setState] = useState(true);
+      setSetState(setState);
+      return (
+        <GatewayProvider>
+          <div>
+            {shouldShow && <GatewayDest name="dest" className="something" component="span" />}
+          </div>
+        </GatewayProvider>
+      );
+    });
+    let rendered;
+    act(() => {
+      rendered = create(<Component />);
+    });
+    expect(rendered).toMatchSnapshot();
+
+    act(() => {
+      setState(false);
+    });
+    expect(rendered).toMatchSnapshot();
+  });
+
+  it('throws on invalid dest name', function () {
+    const throwingRender = () => {
+      act(() => {
+        create(
           <GatewayProvider>
-            <div>
-              <GatewayDest name="dest" className="something" component="span" />
-            </div>
+            <GatewayDest name="invalid##" />
           </GatewayProvider>
         );
-      }
-    }
-    const rendered = create(
-      <Application />
-    );
-    expect(rendered).toMatchSnapshot();
+      });
+    };
+    expect(throwingRender).toThrow('dest names should not have ##');
   });
 
   describe('prop unmountOnEmpty', function () {
