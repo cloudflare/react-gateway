@@ -1,4 +1,7 @@
+// @flow
+
 export default class GatewayRegistry {
+
   constructor() {
     this._setContainerChildrenFns = {};
     this._children = {};
@@ -8,19 +11,32 @@ export default class GatewayRegistry {
   }
 
   _renderContainer(name) {
-    if (!this._setContainerChildrenFns[name] || !this._children[name]) {
+    const self = this;
+    if (!self._setContainerChildrenFns[name]) {
       return;
     }
-
-    this._setContainerChildrenFns[name](
-      Object.keys(this._children[name])
-        .sort()
-        .map(gatewayId => this._children[name][gatewayId])
+    console.log(self._children);
+    self._setContainerChildrenFns[name](
+      self.getChildrenByDestName(name)
     );
   }
 
-  addContainer(name, container) {
-    this._setContainerChildrenFns[name] = container;
+  getChildrenByDestName(destNameToMap) {
+    console.log(this._children);
+    const children = Object.keys(this._children)
+      .map(gatewayId => {
+        const [destName] = getDestNameAndChildId(gatewayId);
+        if (destName != destNameToMap) {
+          return null;
+        }
+        console.log(gatewayId);
+        return this._children[gatewayId];
+      });
+    return children;
+  }
+
+  addContainer(name, containerOpts) {
+    this._setContainerChildrenFns[name] = containerOpts.setChildren;
     this._renderContainer(name);
   }
 
@@ -28,27 +44,46 @@ export default class GatewayRegistry {
     this._setContainerChildrenFns[name] = null;
   }
 
-  addChild(name, gatewayId, child) {
-    this._children[name][gatewayId] = child;
-    this._renderContainer(name);
+  updateGateway(gatewayId, child) {
+    const [destName] = getDestNameAndChildId(gatewayId);
+    this._children[gatewayId] = child;
+    this._renderContainer(destName);
   }
 
-  clearChild(name, gatewayId) {
-    delete this._children[name][gatewayId];
+  clearChild(gatewayId) {
+    console.log('not called');
+    delete this._children[gatewayId];
   }
 
-  register(name, child) {
-    this._children[name] = this._children[name] || {};
+  registerGateway(destName, child) {
+    verifyDestNameValid(destName);
 
-    const gatewayId = `${name}_${this._currentId}`;
-    this._children[name][gatewayId] = child;
+    const gatewayId = `${destName}##${this._currentId}`;
+    this._children[gatewayId] = child;
     this._currentId += 1;
+
+    this._renderContainer(destName);
 
     return gatewayId;
   }
 
-  unregister(name, gatewayId) {
-    this.clearChild(name, gatewayId);
-    this._renderContainer(name);
+  childCount(destName) {
+    return Object.keys(this._children[destName]).length;
+  }
+
+  unregisterGateway(gatewayId) {
+    const [destName] = getDestNameAndChildId(gatewayId);
+    this.clearChild(gatewayId);
+    this._renderContainer(destName);
+  }
+}
+
+function getDestNameAndChildId(gatewayId) {
+  return gatewayId.split('##');
+}
+
+function verifyDestNameValid(destName) {
+  if (destName.indexOf('##') != -1) {
+    throw new Error('into should not have ##');
   }
 }
