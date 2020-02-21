@@ -120,41 +120,47 @@ describe('GatewayDest', function () {
     expect(rendered).toMatchSnapshot();
   });
 
-  it('should not render when no Gateways are registered and "unmountOnEmpty" is set ', function () {
-    class Application extends React.Component {
-      render() {
-        return (
-          <GatewayProvider>
-            <div>
-              <GatewayDest name="dest" unmountOnEmpty />
-            </div>
-          </GatewayProvider>
-        );
+  describe('prop unmountOnEmpty', function () {
+    it('should not render when no Gateways are registered and "unmountOnEmpty" is set ', function () {
+      class Application extends React.Component {
+        render() {
+          return (
+            <GatewayProvider>
+              <div>
+                <GatewayDest name="dest" unmountOnEmpty />
+              </div>
+            </GatewayProvider>
+          );
+        }
       }
-    }
-    const rendered = create(
-      <Application />
-    );
-    expect(rendered).toMatchSnapshot();
-  });
 
-  it('should render when there are Gateways are registered and "unmountOnEmpty" is set ', function () {
-    class Application extends React.Component {
-      render() {
-        return (
-          <GatewayProvider>
-            <div>
-              <Gateway into="dest">hello</Gateway>
-              <GatewayDest name="dest" unmountOnEmpty />
-            </div>
-          </GatewayProvider>
+      let rendered;
+      act(() => {
+        rendered = create(
+          <Application />
         );
+      });
+      expect(rendered).toMatchSnapshot();
+    });
+
+    it('should render when there are Gateways are registered and "unmountOnEmpty" is set ', function () {
+      class Application extends React.Component {
+        render() {
+          return (
+            <GatewayProvider>
+              <div>
+                <Gateway into="dest">hello</Gateway>
+                <GatewayDest name="dest" unmountOnEmpty />
+              </div>
+            </GatewayProvider>
+          );
+        }
       }
-    }
-    const rendered = create(
-      <Application />
-    );
-    expect(rendered).toMatchSnapshot();
+      const rendered = create(
+        <Application />
+      );
+      expect(rendered).toMatchSnapshot();
+    });
   });
 });
 

@@ -52,7 +52,9 @@ exports[`Gateway should render multiple children into a single GatewayDest 1`] =
 </div>
 `;
 
-exports[`GatewayDest should not render when no Gateways are registered and "unmountOnEmpty" is set  1`] = `<div />`;
+exports[`GatewayDest prop unmountOnEmpty should not render when no Gateways are registered and "unmountOnEmpty" is set  1`] = `<div />`;
+
+exports[`GatewayDest prop unmountOnEmpty should render when there are Gateways are registered and "unmountOnEmpty" is set  1`] = `<div />`;
 
 exports[`GatewayDest should render div w/ className and component 1`] = `
 <div>
@@ -61,5 +63,3 @@ exports[`GatewayDest should render div w/ className and component 1`] = `
   />
 </div>
 `;
-
-exports[`GatewayDest should render when there are Gateways are registered and "unmountOnEmpty" is set  1`] = `<div />`;
