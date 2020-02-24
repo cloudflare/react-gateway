@@ -18,7 +18,7 @@
     "modal",
     "dialog"
   ],
-  "author": "James Kyle <me@thejameskyle.com>",
+  "author": "Richard Domingo <chardskarth@gmail.com>",
   "repository": "https://github.com/chardskarth/react-gateway",
   "license": "BSD-3-Clause",
   "dependencies": {

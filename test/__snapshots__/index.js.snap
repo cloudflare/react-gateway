@@ -74,7 +74,9 @@ exports[`Gateway should update Gateway child 3`] = `
 </div>
 `;
 
-exports[`GatewayDest prop unmountOnEmpty GatewayDest should render child Gateways on update 1`] = `
+exports[`GatewayDest prop unmountOnEmpty should not render (or render) when no (or some) Gateways are registered and "unmountOnEmpty" is set  1`] = `<div />`;
+
+exports[`GatewayDest prop unmountOnEmpty should not render (or render) when no (or some) Gateways are registered and "unmountOnEmpty" is set  2`] = `
 <div>
   <div>
     Hello world
@@ -82,7 +84,7 @@ exports[`GatewayDest prop unmountOnEmpty GatewayDest should render child Gateway
 </div>
 `;
 
-exports[`GatewayDest prop unmountOnEmpty should not render when no Gateways are registered and "unmountOnEmpty" is set  1`] = `<div />`;
+exports[`GatewayDest prop unmountOnEmpty should not render (or render) when no (or some) Gateways are registered and "unmountOnEmpty" is set  3`] = `<div />`;
 
 exports[`GatewayDest prop unmountOnEmpty should render when there are Gateways registered and "unmountOnEmpty" is set  1`] = `
 <div>

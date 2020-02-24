@@ -225,13 +225,16 @@ describe('GatewayDest', function () {
       });
     });
 
-    it('should not render when no Gateways are registered and "unmountOnEmpty" is set ', function () {
+    it('should not render (or render) when no (or some) Gateways are registered and "unmountOnEmpty" is set ', function () {
       expect(rendered).toMatchSnapshot();
-    });
 
-    it('GatewayDest should render child Gateways on update', function () {
       act(() => {
         setState(true);
+      });
+      expect(rendered).toMatchSnapshot();
+
+      act(() => {
+        setState(false);
       });
       expect(rendered).toMatchSnapshot();
     });
@@ -256,38 +259,6 @@ describe('GatewayDest', function () {
         );
       });
       expect(rendered).toMatchSnapshot();
-    });
-  });
-});
-
-describe.skip('GatewayRegistry', function () {
-  let gatewayRegistry;
-  beforeEach(() => {
-    gatewayRegistry = new GatewayRegistry();
-  });
-  describe('registerGateway', function () {
-    it('should not allow \'into\' to have ##', function () {
-      const shouldThrow = () => {
-        gatewayRegistry.registerGateway('test##', <span />);
-      };
-      expect(shouldThrow).toThrow();
-    });
-    it('should return a gateway id', function () {
-      expect(gatewayRegistry.registerGateway('test', <span />)).toEqual('test##0');
-    });
-
-    it('should increment intrernal ids', function () {
-      gatewayRegistry.registerGateway('test', <span />);
-      gatewayRegistry.registerGateway('test', <span />);
-      expect(gatewayRegistry._currentId).toEqual(2);
-    });
-  });
-  describe('unregisterGateway', function () {
-    it('should remove registered child', function () {
-      const gatewayId = gatewayRegistry.registerGateway('test', <span />);
-      expect(gatewayRegistry.childCount('test')).toBe(1);
-      gatewayRegistry.unregisterGateway(gatewayId);
-      expect(gatewayRegistry.childCount('test')).toBe(0);
     });
   });
 });

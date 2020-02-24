@@ -22,10 +22,7 @@ function GatewayProvider({ children }) {
 	};
 
 	const removeGateway = (gatewayId) => {
-		setGateways(prevGateways => ({
-			...prevGateways,
-			[gatewayId]: undefined,
-		}));
+		setGateways(removeByKey(gatewayId));
 		const [destName] = getDestNameAndChildId(gatewayId);
 		containers[destName] && containers[destName](
 			getContainerChildren(destName)
@@ -48,10 +45,7 @@ function GatewayProvider({ children }) {
 	};
 
 	const removeContainer = (name) => {
-		setContainer(prevContainers => ({
-			...prevContainers,
-			[name]: undefined
-		}));
+		setContainer(removeByKey(name));
 	};
 
 	const getContainerChildren = (name) => {
@@ -84,6 +78,14 @@ function GatewayProvider({ children }) {
 GatewayProvider.propTypes = {
 	children: PropTypes.element,
 };
+
+function removeByKey(keyToRemove) {
+	return (removeFrom) => {
+		let clone = Object.assign({}, removeFrom);
+		delete clone[keyToRemove];
+		return clone;
+	};
+}
 
 function getDestNameAndChildId(gatewayId) {
 	return gatewayId.split('##');
