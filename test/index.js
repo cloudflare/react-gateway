@@ -5,7 +5,6 @@ import {
   Gateway,
   GatewayDest,
   GatewayProvider,
-  GatewayRegistry,
 } from '../src/index.js';
 import GatewayContext from '../src/GatewayContext';
 
