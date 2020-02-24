@@ -261,4 +261,28 @@ describe('GatewayDest', function () {
       expect(rendered).toMatchSnapshot();
     });
   });
+
+  it('should not render on null Gateway', function () {
+
+    let rendered;
+    const { Component, setState } = withExposedSetState(({ setSetState }) => {
+      return (
+        <GatewayProvider>
+          <div>
+            <GatewayDest name="dest" unmountOnEmpty />
+            <Gateway into="dest">{null}</Gateway>
+          </div>
+        </GatewayProvider>
+      );
+    });
+
+    act(() => {
+      rendered = create(
+        <Component />
+      );
+    });
+    expect(rendered).toMatchSnapshot();
+  });
+
+
 });

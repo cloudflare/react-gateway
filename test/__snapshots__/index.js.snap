@@ -94,6 +94,8 @@ exports[`GatewayDest prop unmountOnEmpty should render when there are Gateways r
 </div>
 `;
 
+exports[`GatewayDest should not render on null Gateway 1`] = `<div />`;
+
 exports[`GatewayDest should render div w/ className and component 1`] = `
 <div>
   <span

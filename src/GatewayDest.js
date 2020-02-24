@@ -13,9 +13,11 @@ function GatewayDest({ name, component, unmountOnEmpty, ...attrs }) {
     };
   }, []);
 
-  return unmountOnEmpty && !children.length
+  const nonNullChildren = children.filter(it => Boolean(it));
+
+  return unmountOnEmpty && !nonNullChildren.length
     ? null
-    : React.createElement(component || 'div', attrs, children);
+    : React.createElement(component || 'div', attrs, nonNullChildren);
 }
 
 GatewayDest.propTypes = {
