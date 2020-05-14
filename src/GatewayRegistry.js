@@ -7,13 +7,19 @@ export default class GatewayRegistry {
     this._currentId = 0;
   }
 
+  _getChildIndex(childId) {
+    return +childId.match(/\d+$/)[0]
+  }
+
   _renderContainer(name) {
     if (!this._containers[name] || !this._children[name]) {
       return;
     }
 
     this._containers[name].setState({
-      children: Object.keys(this._children[name]).sort().map(id => this._children[name][id])
+      children: Object.keys(this._children[name])
+          .sort((a, b) => this._getChildIndex(a) - this._getChildIndex(b))
+          .map(id => this._children[name][id])
     });
   }
 
