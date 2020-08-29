@@ -7,7 +7,7 @@ Render React DOM into a new context (aka "Portal")
 ## Installation
 
 ```sh
-$ npm install --save react-gateway
+$ npm install --save @chardskarth/react-gateway
 ```
 
 ## Example
@@ -18,7 +18,7 @@ import {
   Gateway,
   GatewayDest,
   GatewayProvider
-} from 'react-gateway';
+} from '@chardskarth/react-gateway';
 
 export default class Application extends React.Component {
   render() {
