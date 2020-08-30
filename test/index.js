@@ -1,193 +1,287 @@
-import {expect} from 'chai';
-
-import React from 'react';
-import PropTypes from 'prop-types';
+import React, { useContext, useState } from 'react';
+import { create, act } from 'react-test-renderer';
 import ReactDOMServer from 'react-dom/server';
 import {
   Gateway,
   GatewayDest,
   GatewayProvider,
-  GatewayRegistry
 } from '../src/index.js';
+import GatewayContext from '../src/GatewayContext';
 
-function render(jsx) {
-  return ReactDOMServer.renderToStaticMarkup(jsx);
-}
+const withExposedSetState = (Component) => {
+  let setState;
+  let setSetState = (setStateParam) => {
+    setState = setStateParam;
+  };
+  return {
+    setState: (state) => {
+      setState(state);
+    },
+    Component: (props) => <Component setSetState={setSetState} {...props} />
+  };
+};
 
-function assertEqual(actual, expected) {
-  expect(render(actual)).to.equal(render(expected));
-}
-
-describe('Gateway', function() {
-  it('should render Gateway in GatewayDest', function() {
-    assertEqual(
-      <GatewayProvider>
-        <div>
-          <section>
-            <Gateway into="foo">
-              Hello World
-            </Gateway>
-          </section>
-          <GatewayDest name="foo"/>
-        </div>
-      </GatewayProvider>,
-      // should equal
-      <div>
-        <section/>
-        <div>Hello World</div>
-      </div>
-    );
-  });
-
-  it('should be able to customize the GatewayDest element', function() {
-    assertEqual(
-      <GatewayProvider>
-        <GatewayDest component="section" className="elf" id="striped" name="foo"/>
-      </GatewayProvider>,
-      // should equal
-      <section className="elf" id="striped"/>
-    );
-  });
-
-  it('should be able to customize the GatewayDest with custom components', function() {
-    function Child(props) {
-      return <h1 id={props.id}>{props.children}</h1>;
-    }
-
-    assertEqual(
-      <GatewayProvider>
-        <GatewayDest component={Child} id="test" name="foo"/>
-      </GatewayProvider>,
-      // should equal
-      <Child id="test"/>
-    );
-  });
-
-  it('should render into the correct GatewayDest', function() {
-    assertEqual(
-      <GatewayProvider>
-        <div>
-          <Gateway into="foo">One</Gateway>
-          <Gateway into="bar">Two</Gateway>
-          <GatewayDest name="bar"/>
-          <GatewayDest name="foo"/>
-        </div>
-      </GatewayProvider>,
-      // should equal
-      <div>
-        <div>Two</div>
-        <div>One</div>
-      </div>
-    );
-  });
-
-  it('should render multiple children into a single GatewayDest', function() {
-    assertEqual(
-      <GatewayProvider>
-        <div>
-          <section>
-            <Gateway into="foo">
-              <div>One</div>
-            </Gateway>
-            <div>
-              <Gateway into="foo">
-                <div>Two</div>
-              </Gateway>
-            </div>
-            <Gateway into="foo">
-              <div>Three</div>
-            </Gateway>
-          </section>
-          <GatewayDest name="foo"/>
-        </div>
-      </GatewayProvider>,
-      // should equal
-      <div>
-        <section>
-          <div />
-        </section>
-        <div>
-          <div>One</div>
-          <div>Two</div>
-          <div>Three</div>
-        </div>
-      </div>
-    );
-  });
-
-  it('should pass context', function() {
-    class Child extends React.Component {
-      static contextTypes = {
-        textContent: PropTypes.string.isRequired
-      };
-
-      constructor(props, context) {
-        super(props, context);
-        this.textContent = context.textContent;
-      }
-
-      render() {
-        return (
-          <Gateway into="dest">
-            <span>{this.textContent}</span>
-          </Gateway>
-        );
-      }
-    }
-
-    class Parent extends React.Component {
-      static childContextTypes = {
-        textContent: PropTypes.string.isRequired
-      };
-
-      getChildContext() {
-        return {
-          textContent: 'Hello from context'
-        };
-      }
-
-      render() {
-        return <Child/>;
-      }
-    }
-
-    class Application extends React.Component {
-      render() {
-        return (
+describe('Gateway', function () {
+  it('throws on invalid dest name', function () {
+    const throwingRender = () => {
+      act(() => {
+        create(
           <GatewayProvider>
             <div>
-              <Parent/>
-              <GatewayDest name="dest"/>
+              <GatewayDest name="invaid##" />
+              <Gateway into="invaid##" />
             </div>
           </GatewayProvider>
         );
-      }
-    }
+      });
+    };
+    expect(throwingRender).toThrow('dest names should not have ##');
+  });
 
-    assertEqual(
-      <Application/>,
-      // should equal
-      <div>
-        <div>
-          <span>Hello from context</span>
-        </div>
-      </div>
-    );
+  it('should render Gateway in GatewayDest', function () {
+    let rendered;
+    act(() => {
+      rendered = create(
+        <GatewayProvider>
+          <div>
+            <section>
+              <Gateway into="foo">
+                Hello World
+            </Gateway>
+            </section>
+            <GatewayDest name="foo" />
+          </div>
+        </GatewayProvider>
+      );
+    });
+    expect(rendered).toMatchSnapshot();
+  });
+
+  it('should be able to customize the GatewayDest element', function () {
+    let rendered;
+
+    act(() => {
+      rendered = create(
+        <GatewayProvider>
+          <GatewayDest component="section" className="elf" id="striped" name="foo" />
+        </GatewayProvider>,
+      );
+    });
+    expect(rendered).toMatchSnapshot();
+  });
+
+  it('should be able to customize the GatewayDest with custom components', function () {
+    function Child(props) {
+      return <h1 id={props.id}>{props.children}</h1>;
+    }
+    let rendered;
+    act(() => {
+      rendered = create(
+        <GatewayProvider>
+          <GatewayDest component={Child} id="test" name="foo" />
+        </GatewayProvider>
+      );
+    });
+    expect(rendered).toMatchSnapshot();
+  });
+
+  it('should render into the correct GatewayDest', function () {
+    let rendered;
+    act(() => {
+      rendered = create(
+        <GatewayProvider>
+          <div>
+            <Gateway into="foo">One</Gateway>
+            <Gateway into="bar">Two</Gateway>
+            <GatewayDest name="bar" />
+            <GatewayDest name="foo" />
+          </div>
+        </GatewayProvider>
+      );
+    });
+    expect(rendered).toMatchSnapshot();
+  });
+
+  it('should render multiple children into a single GatewayDest', function () {
+    let rendered;
+    act(() => {
+      rendered = create(
+        <GatewayProvider>
+          <div>
+            <section>
+              <Gateway into="foo">
+                <div>One</div>
+              </Gateway>
+              <div>
+                <Gateway into="foo">
+                  <div>Two</div>
+                </Gateway>
+              </div>
+              <Gateway into="foo">
+                <div>Three</div>
+              </Gateway>
+            </section>
+            <GatewayDest name="foo" />
+          </div>
+        </GatewayProvider>
+      );
+    });
+    expect(rendered).toMatchSnapshot();
+  });
+
+  it('should update Gateway child', async function () {
+    let rendered;
+    const { Component, setState } = withExposedSetState(({ setSetState }) => {
+      const [{ text, showChild }, setState] = useState({ text: 'Hello world', showChild: true });
+      setSetState(setState);
+      return (
+        <GatewayProvider>
+          <div>
+            {showChild && <Gateway into="dest">{text}</Gateway>}
+            <GatewayDest name="dest" />
+          </div>
+        </GatewayProvider>
+      );
+    });
+
+    act(() => {
+      rendered = create(<Component />);
+    });
+    expect(rendered).toMatchSnapshot();
+
+    act(() => {
+      setState({ text: 'world', showChild: true });
+    });
+    expect(rendered).toMatchSnapshot();
+
+    act(() => {
+      setState({ showChild: false });
+    });
+    expect(rendered).toMatchSnapshot();
   });
 });
 
-describe('GatewayRegistry', function() {
-  describe('register', function () {
-    it('should return a gateway id', function () {
-      const gatewayRegistry = new GatewayRegistry();
-      expect(gatewayRegistry.register('test', <span />)).to.equal('test_0');
+describe('GatewayDest', function () {
+  it('should render div w/ className and component', function () {
+    const { Component, setState } = withExposedSetState(({ setSetState }) => {
+      const [shouldShow, setState] = useState(true);
+      setSetState(setState);
+      return (
+        <GatewayProvider>
+          <div>
+            {shouldShow && <GatewayDest name="dest" className="something" component="span" />}
+          </div>
+        </GatewayProvider>
+      );
+    });
+    let rendered;
+    act(() => {
+      rendered = create(<Component />);
+    });
+    expect(rendered).toMatchSnapshot();
+
+    act(() => {
+      setState(false);
+    });
+    expect(rendered).toMatchSnapshot();
+  });
+
+  it('throws on invalid dest name', function () {
+    const throwingRender = () => {
+      act(() => {
+        create(
+          <GatewayProvider>
+            <GatewayDest name="invalid##" />
+          </GatewayProvider>
+        );
+      });
+    };
+    expect(throwingRender).toThrow('dest names should not have ##');
+  });
+
+  describe('prop unmountOnEmpty', function () {
+
+    let rendered;
+    const { Component, setState } = withExposedSetState(({ setSetState }) => {
+      const [showOneChild, setShowOne] = useState(false);
+      setSetState(setShowOne);
+
+      return (
+        <GatewayProvider>
+          <div>
+            <GatewayDest name="dest" unmountOnEmpty />
+            {showOneChild && <Gateway into="dest">Hello world</Gateway>}
+          </div>
+        </GatewayProvider>
+      );
     });
 
-    it('should increment intrernal ids', function () {
-      const gatewayRegistry = new GatewayRegistry();
-      gatewayRegistry.register('test', <span />);
-      gatewayRegistry.register('test', <span />);
-      expect(gatewayRegistry._currentId).to.equal(2);
+    beforeAll(function () {
+      act(() => {
+        rendered = create(
+          <Component />
+        );
+      });
+    });
+
+    it('should not render (or render) when no (or some) Gateways are registered and "unmountOnEmpty" is set ', function () {
+      expect(rendered).toMatchSnapshot();
+
+      act(() => {
+        setState(true);
+      });
+      expect(rendered).toMatchSnapshot();
+
+      act(() => {
+        setState(false);
+      });
+      expect(rendered).toMatchSnapshot();
+    });
+
+    it('should render when there are Gateways registered and "unmountOnEmpty" is set ', function () {
+      class Application extends React.Component {
+        render() {
+          return (
+            <GatewayProvider>
+              <div>
+                <Gateway into="dest">hello</Gateway>
+                <GatewayDest name="dest" unmountOnEmpty />
+              </div>
+            </GatewayProvider>
+          );
+        }
+      }
+      let rendered;
+      act(() => {
+        rendered = create(
+          <Application />
+        );
+      });
+      expect(rendered).toMatchSnapshot();
     });
   });
+
+  it('should not render on null Gateway', function () {
+
+    let rendered;
+    const { Component, setState } = withExposedSetState(({ setSetState }) => {
+      return (
+        <GatewayProvider>
+          <div>
+            <GatewayDest name="dest" unmountOnEmpty />
+            <Gateway into="dest">{null}</Gateway>
+          </div>
+        </GatewayProvider>
+      );
+    });
+
+    act(() => {
+      rendered = create(
+        <Component />
+      );
+    });
+    expect(rendered).toMatchSnapshot();
+  });
+
+
 });
