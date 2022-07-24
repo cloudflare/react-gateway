@@ -9,7 +9,7 @@
     "format": "jsfmt -w *.js src/ test/",
     "lint": "eslint src/ test/",
     "prepublish": "npm run build",
-    "test": "jest"
+    "test": "jest --verbose"
   },
   "keywords": [
     "react",
@@ -47,7 +47,8 @@
     "minimist": "^1.2.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
-    "react-test-renderer": "^16.12.0"
+    "react-test-renderer": "^16.12.0",
+    "@testing-library/react": "12.1.5"
   },
   "peerDependencies": {
     "react": "^0.14.0 || ^15.0.0 || ^16.0.0"

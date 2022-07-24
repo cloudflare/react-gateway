@@ -7,7 +7,7 @@ import React, {
 import PropTypes from 'prop-types';
 import GatewayContext from './GatewayContext';
 
-function Gateway({ into, children }) {
+function Gateway({ into, children, sort }) {
   const [gatewayId, setGatewayId] = useState(null);
   const { addGateway, removeGateway, updateGateway } = useContext(GatewayContext);
 
@@ -17,7 +17,7 @@ function Gateway({ into, children }) {
       gatewayId = gatewayIdParam;
       setGatewayId(gatewayIdParam);
     };
-    addGateway(into, children, onSetGatewayId);
+    addGateway(into, children, onSetGatewayId, sort);
     return () => {
       removeGateway(gatewayId);
     };

@@ -2,23 +2,33 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import GatewayContext from './GatewayContext';
 
+
 function GatewayProvider({ children }) {
 	const [_, setCurrentId] = useState(0);
 	const [gateways, setGateways] = useState({});
+	const [gatewaySorts, setGatewaysSorts] = useState({});
 	const [containers, setContainer] = useState({});
 
-	const addGateway = (destName, child, setGatewayId) => {
+	const addGateway = (destName, child, setGatewayId, sort) => {
 		verifyDestNameValid(destName);
+		verifySortValid(sort);
 
 		setCurrentId(prevCurrentId => {
 			const gatewayId = `${destName}##${prevCurrentId}`;
+			setGatewayId(gatewayId);
+
 			setGateways(prevGateways => ({
 				...prevGateways,
 				[gatewayId]: child
 			}));
-			setGatewayId(gatewayId);
+
+			setGatewaysSorts(prevGatewaySorts => ({
+				...prevGatewaySorts,
+				[gatewayId]: sort
+			}));
 			return prevCurrentId + 1;
 		});
+
 	};
 
 	const removeGateway = (gatewayId) => {
@@ -55,7 +65,16 @@ function GatewayProvider({ children }) {
 				if (destName != name) {
 					return null;
 				}
-				return gateways[gatewayId];
+				return {
+					sort: gatewaySorts[gatewayId],
+					gateways: gateways[gatewayId],
+				};
+			})
+			.sort((a, b) => {
+				return getSortValue(a) - getSortValue(b);
+			})
+			.map(sortContext => {
+				return sortContext && sortContext.gateways;
 			});
 	};
 
@@ -96,5 +115,19 @@ function verifyDestNameValid(destName) {
 		throw new Error('dest names should not have ##');
 	}
 }
+
+function verifySortValid(sort) {
+	if (sort && typeof sort !== 'number') {
+		throw new Error('sort should be a number');
+	}
+}
+
+function getSortValue(sortContext){
+	if(!sortContext|| sortContext.sort === undefined) {
+		return Number.MAX_VALUE;
+	}
+	return sortContext.sort;
+};
+
 
 export default GatewayProvider;

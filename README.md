@@ -153,6 +153,20 @@ component), and they will be passed to the created element.
   }
 ```
 
+## GatewayDest props
+
+| Prop Name | Description |
+| -- | -- |
+| `name` | name of this container. Renders all `Gateway` that have the matching `Gateway` `into` prop value. |
+| `component` | React component that renders. Defaults to `div`.  |
+| `unmountOnEmpty` | if true, the DOM container removes itself if there are no child `Gateway` to be rendered. |
+
+## Gateway props
+| Prop Name | Description |
+| -- | -- |
+| `into` | name of the `GatewayDest` to render itself into. |
+| `sort` | Number. Defines its sorting order among its sibling `Gateway` |
+
 ## How it works
 
 React Gateway works very differently than most React "portals" in order to work
