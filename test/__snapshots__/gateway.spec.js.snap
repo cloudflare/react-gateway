@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Gateway should be able to customize the GatewayDest element 1`] = `
+<section
+  className="elf"
+  id="striped"
+/>
+`;
+
+exports[`Gateway should be able to customize the GatewayDest with custom components 1`] = `
+<h1
+  id="test"
+/>
+`;
+
+exports[`Gateway should render Gateway in GatewayDest 1`] = `
+<div>
+  <section />
+  <div>
+    Hello World
+  </div>
+</div>
+`;
+
+exports[`Gateway should render into the correct GatewayDest 1`] = `
+<div>
+  <div>
+    Two
+  </div>
+  <div>
+    One
+  </div>
+</div>
+`;
+
+exports[`Gateway should render multiple children into a single GatewayDest 1`] = `
+<div>
+  <section>
+    <div />
+  </section>
+  <div>
+    <div>
+      One
+    </div>
+    <div>
+      Two
+    </div>
+    <div>
+      Three
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Gateway should update Gateway child 1`] = `
+<div>
+  <div>
+    Hello world
+  </div>
+</div>
+`;
+
+exports[`Gateway should update Gateway child 2`] = `
+<div>
+  <div>
+    world
+  </div>
+</div>
+`;
+
+exports[`Gateway should update Gateway child 3`] = `
+<div>
+  <div />
+</div>
+`;
