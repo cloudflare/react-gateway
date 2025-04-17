@@ -1,44 +1,39 @@
-import React from 'react';
+import React, {
+  useContext,
+  useLayoutEffect,
+  useEffect,
+  useState
+} from 'react';
 import PropTypes from 'prop-types';
-import GatewayRegistry from './GatewayRegistry';
+import GatewayContext from './GatewayContext';
 
-export default class Gateway extends React.Component {
-  static contextTypes = {
-    gatewayRegistry: PropTypes.instanceOf(GatewayRegistry).isRequired
-  };
+function Gateway({ into, children, sort }) {
+  const [gatewayId, setGatewayId] = useState(null);
+  const { addGateway, removeGateway, updateGateway } = useContext(GatewayContext);
 
-  static propTypes = {
-    into: PropTypes.string.isRequired,
-    children: PropTypes.node
-  };
+  useEffect(() => {
+    let gatewayId;
+    const onSetGatewayId = (gatewayIdParam) => {
+      gatewayId = gatewayIdParam;
+      setGatewayId(gatewayIdParam);
+    };
+    addGateway(into, children, onSetGatewayId, sort);
+    return () => {
+      removeGateway(gatewayId);
+    };
+  }, []);
 
-  constructor(props, context) {
-    super(props, context);
-    this.gatewayRegistry = context.gatewayRegistry;
-  }
+  useEffect(() => {
+    if (!gatewayId) { return; }
+    updateGateway(gatewayId, children);
+  }, [gatewayId, children]);
 
-  componentWillMount() {
-    this.id = this.gatewayRegistry.register(
-      this.props.into,
-      this.props.children
-    );
-    this.renderIntoGatewayNode(this.props);
-  }
-
-  componentWillReceiveProps(props) {
-    this.gatewayRegistry.clearChild(this.props.into, this.id);
-    this.renderIntoGatewayNode(props);
-  }
-
-  componentWillUnmount() {
-    this.gatewayRegistry.unregister(this.props.into, this.id);
-  }
-
-  renderIntoGatewayNode(props) {
-    this.gatewayRegistry.addChild(this.props.into, this.id, props.children);
-  }
-
-  render() {
-    return null;
-  }
+  return null;
 }
+
+Gateway.propTypes = {
+  into: PropTypes.string.isRequired,
+  children: PropTypes.node
+};
+
+export default Gateway;
